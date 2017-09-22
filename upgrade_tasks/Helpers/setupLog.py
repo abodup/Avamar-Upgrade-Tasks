@@ -1,9 +1,23 @@
 #!/usr/bin/python
+import os
 ############### Start setupLog() ###############
 def setupLog():
-	global logfile 
-	logfile = open("./upgrade_tasks_root.log", "wa+")
-############### Start End() ####################
+	global log 
+	log = open("./upgrade_tasks.log", "wa")
+	text = """
+##################################################################
+#                      Log File Created                          #
+##################################################################
+"""
+	log.write("%s %s"%(localTime(), text))
+	
+############### End setupLog() ####################
+
+
 setupLog()
-logfile.write("%s 321\n" %localTime())
-logfile.write("%s 654\n" %localTime())
+
+f= os.popen("avinstaller.pl --version")
+output = f.read()
+log.write("%s hi\n" %localTime())
+log.write("%s Hey\n" %localTime())
+log.write("%s %s"%(localTime(), output))
