@@ -1,21 +1,29 @@
-def extractUpgradeFiles(avaimFULL, checksumFULL, avinstallerFile, upgradeFile, customerHandoverScript, UpgradeClientDownloads, avaimRCM, checksumRCM, callableFixesMandatory, callableFixesOptional, notCallableFixesMandatory):
+def extractCopyAvps(avaimFULL, checksumFULL, avinstallerFile, upgradeFile, customerHandoverScript, UpgradeClientDownloads, avaimRCM, checksumRCM, callableFixesMandatory, callableFixesOptional, notCallableFixesMandatory):
 		
 	clearRepo()
 
 	checkExtractPackage(avaimFULL, checksumFULL)
 	checkExtractPackage(avaimRCM, checksumRCM)
 	
-	
-	question = "Is Avinstaller upgrade required"
-	if query_yes_no(question, default = "no"):
-		os.system("mv /usr/local/avamar/src/avaim_FULL_7.4.1-58_1/other_avps/UpgradeAvinstaller-7.4.1-58.avp /data01/avamar/repo/packages")
-		print "UpgradeAvinstaller-7.4.1-58.avp File copied to repo packages"
-		print "Please go ahead and upgrade the avinstaller"
+	if aviUpgradeNeeded(currentFamily, currentVersion, targetVersion): #### NEEDS CORRECTION
+		print "Avinstaller upgrade is needed to " + targetVersion
+		os.system("mv /usr/local/avamar/src/avaim_FULL_7.4.1-58_1/mv2repo/AvamarUpgrade-7.4.1-58.avp /data01/avamar/repo/packages")
+		print avinstallerFile+ " File copied to Avinstaller Repo"
+		question  """Please open the Avinstaller and upgrade the Avinstller from there
+		Did Avinstaller Upgrade complete?"""
 		
-	else:
-		print "Skipping Avinstaller upgrade step"
+		cond = False
+		while cond
+		question  """Please open the Avinstaller and upgrade the Avinstller from there
+Did Avinstaller Upgrade complete?"""
+		if not query_yes_no(question, default = "yes"):
+			
+		
+			cond = True
+		
+		
 	
-	os.system("mv /usr/local/avamar/src/avaim_FULL_7.4.1-58_1/mv2repo/AvamarUpgrade-7.4.1-58.avp /data01/avamar/repo/packages")
+	
 	print "AvamarUpgrade-7.4.1-58.av File copied to repo packages"
 	
 	question = "Do you want to include UpgradeClientDownloads as callable package with the upgrade"
