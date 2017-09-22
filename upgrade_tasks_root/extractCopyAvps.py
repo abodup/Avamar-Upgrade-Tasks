@@ -1,7 +1,6 @@
 def extractCopyAvps(avaimFULL, checksumFULL, avinstallerFile, upgradeFile, customerHandoverScript, UpgradeClientDownloads, avaimRCM, checksumRCM, callableFixesMandatory, callableFixesOptional, notCallableFixesMandatory):
 		
 	clearRepo()
-
 	checkExtractPackage(avaimFULL, checksumFULL)
 	checkExtractPackage(avaimRCM, checksumRCM)
 	
@@ -10,7 +9,7 @@ def extractCopyAvps(avaimFULL, checksumFULL, avinstallerFile, upgradeFile, custo
 		os.system("mv /usr/local/avamar/src/avaim_FULL_7.4.1-58_1/mv2repo/AvamarUpgrade-7.4.1-58.avp /data01/avamar/repo/packages")
 		print avinstallerFile+ " File copied to Avinstaller Repo"
 		question  """Please open the Avinstaller and upgrade the Avinstller from there
-		Did Avinstaller Upgrade complete?"""
+Did Avinstaller Upgrade complete?"""
 		
 		cond = False
 		while cond

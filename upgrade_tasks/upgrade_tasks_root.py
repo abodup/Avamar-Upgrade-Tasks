@@ -2,9 +2,8 @@
 
 import sys
 import os
-
 import re
-
+from datetime import datetime
 
 ############### Start main() ###############
 
@@ -19,8 +18,37 @@ def main():
 ############### End main() ###############
 
 
+##################### HELPERS ###############################
 
+############### Start localTime() ###############
+def localTime():
+	return str(datetime.now())
+############### End localTime() ###############
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 ############### Start getArgs() ###############
+
 def getArgs():
 	
 	##### Get Current Version ###
@@ -73,7 +101,8 @@ def getArgs():
 		print "Invalid command line argument", sys.argv[1]
 		print "Please use--preupgrade=, --postupgrade= or --techconsult="
 		sys.exit()
-	
+
+		
 	
 ############### End getArgs() ###############		
 

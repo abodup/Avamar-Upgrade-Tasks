@@ -1,9 +1,4 @@
 #!/usr/bin/python
-
-from datetime import datetime
-def localTime():
-	return str(datetime.now())
-
 def setupLog():
 	global logfile 
 	

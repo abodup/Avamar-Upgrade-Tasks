@@ -1,4 +1,4 @@
-def aviUpgradeNeeded(currentFamily, currentVersion, targetVersion):
+def aviUpgradeNeeded(currentFamily, currentVersion, targetFamily, targetVersion):
 	if (currentFamily == "6.1" or currentFamily == "7.0" or currentVersion == "7.1.0-370") and (targetFamily == "7.1" or targetFamily == "7.2"):
 		return True
 	
