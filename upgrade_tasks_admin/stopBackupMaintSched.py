@@ -15,7 +15,6 @@ def stopBackupMaintSched():
 	if (lines[0][-3:-1] == 'OK') and (lines[1][-3:-1] == 'OK') and (lines[2][-3:-1] == 'OK'):
 		print "Stopping Maintenence Scheduler"
 		os.system("dpnctl stop maint")
-		os.system("dpnctl stop sched")
 	
 	f = os.popen("dpnctl status maint 2>&1")
 	lines = f.read().split('\n')
@@ -27,6 +26,7 @@ please try manually and when done Press yes to continue or press no to quit"""
 		f = os.popen("dpnctl status  2>&1")
 		lines = f.read().split('\n')	
 	
+	os.system("dpnctl stop sched")
 	f = os.popen("dpnctl status sched 2>&1")
 	lines = f.read().split('\n')
 	schedStatus = False

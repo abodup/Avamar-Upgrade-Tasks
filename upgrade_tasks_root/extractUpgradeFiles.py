@@ -1,44 +1,11 @@
-def extractUpgradeFiles(avaimFull, avaimRCM):
-	
-	fullCheckCond = False
-	rcmCheckCond = False
-	fullChecksum = "896050a0b296fa9c5f78036e1a1b6238a464fd4ce8d49c6884aa998ae04e2b94"
-	rcmChecksum = "59e0d0c5733c60bb81e0116183c6322131cccbdeb237a96d5b53c45089b1f767"
+def extractUpgradeFiles(avaimFULL, checksumFULL, avinstallerFile, upgradeFile, customerHandoverScript, UpgradeClientDownloads, avaimRCM, checksumRCM, callableFixesMandatory, callableFixesOptional, notCallableFixesMandatory):
+		
+	clearRepo()
 
-	#### Empty /data01 ####
+	checkExtractPackage(avaimFULL, checksumFULL)
+	checkExtractPackage(avaimRCM, checksumRCM)
 	
-	##################
 	
-	#### Loop to check avaimFULL file exists and checksum is clean ####
-	while not fullCheckCond:
-		
-		#### Empty /data01
-		
-		
-		##### Check avaimFull exist ####
-		while not os.path.isfile("/usr/local/avamar/src/" + avaimFull):
-			print avaimFull + " File doesn't exists at /usr/local/avamar/src"
-			question = "please place the file under the specified location, press yes to continue or press no to abort"
-			if not query_yes_no(question): sys.exit()
-		print avaimFull + " File Found"
-		
-		##### Check SHA256SUM of avaimFull file ####
-	
-		print "checking Checksum of " + avaimFull
-		f = os.popen("sha256sum /usr/local/avamar/src/" + avaimFull)
-		checksum = f.read().split()[0]
-		print checksum
-		if checksum == fullChecksum:
-			fullCheckCond = True
-			print avaimFull + " checksum OK" 
-		else: 
-			print avaimFull + " checksum is not correct"
-			question = "please download the %s file again, press yes to check for files again, or press no to abort" %avaimFull
-			if not query_yes_no(question): sys.exit()
-		
-	#### Extracting avaimFull
-	print "Extracting " + avaimFull
-	os.system("tar xzvf /usr/local/avamar/src/avaim_FULL_7.4.1-58_1.tgz -C /usr/local/avamar/src")
 	question = "Is Avinstaller upgrade required"
 	if query_yes_no(question, default = "no"):
 		os.system("mv /usr/local/avamar/src/avaim_FULL_7.4.1-58_1/other_avps/UpgradeAvinstaller-7.4.1-58.avp /data01/avamar/repo/packages")

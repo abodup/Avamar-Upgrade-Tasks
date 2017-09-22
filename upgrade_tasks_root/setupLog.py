@@ -12,5 +12,3 @@ def setupLog():
 setupLog()
 logfile.write("%s 321\n" %localTime())
 logfile.write("%s 654\n" %localTime())
-
-

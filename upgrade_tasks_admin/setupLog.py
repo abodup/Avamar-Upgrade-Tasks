@@ -6,7 +6,6 @@ def localTime():
 
 def setupLog():
 	global logfile 
-	
 	logfile = open("./upgrade_tasks_admin.log", "wa+")
 	
 setupLog()

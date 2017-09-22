@@ -8,8 +8,14 @@ import re
 def getArgs():
 	
 	##### Get Current Version ###
+	logfile.write("%s Getting Current Version \n" %localTime())
 	f = os.popen("rpm -qa | grep dpnserver")
-	currentVersion= f.read().split("\n")[0].split("-",1)[1]
+	output = f.read()
+	logfile.write("%s Command: rpm -qa | grep dpnserver \n" %localTime())
+	logfile.write("%s Output: %s \n" %(localTime(), output))
+	
+	currentVersion= output.split("\n")[0].split("-",1)[1]
+	logfile.write("%s currentVersion = %s\n" %(localTime(), currentVersion))
 	
 	
 	
