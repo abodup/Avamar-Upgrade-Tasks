@@ -1,14 +1,17 @@
-import sys
-import os
-
-preUpgrade =  True
-postUpgrade = False
-targetVersion = "7.4.1"
-
 ############### Start main() ###############
 def main():
-	if preUpgrade:
+	setupLog()
+	prePostTech, targetVersion , revNo, currentVersion = getArgs()
+	if prePostTech == "preUpgrade":
+		printBoth("Executing PreUpgrade Tasks")
 		preUpgradeTasks()
-	elif postUpgrade:
-		preUpgradeTasks()
+	elif prePostTech == "postUpgrade":
+		printBoth("Executing PostUpgrade Tasks")
+		#preUpgradeTasks()
+	message ="""
+##################################################################
+#                  End upgrade_tasks.py Script                   #
+##################################################################
+"""
+	printLog(message)
 ############### End main() ###############

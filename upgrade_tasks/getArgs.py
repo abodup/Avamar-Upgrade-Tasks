@@ -37,7 +37,7 @@ def getArgs():
 			printLog("prePostTech = preUpgrade, Target Version = %s, revNo= %s" %(targetVersion, revNo))
 		else:
 		
-			printBoth("Invalid command line argument" + str(sys,argv[2]))
+			printBoth("Invalid command line argument " + str(sys.argv[2]))
 			printBoth("with preupgrade you need to specify RCM revision package number with --rev=")
 			printLog("Terminating upgrade_tasks.py script")
 			sys.exit()
@@ -50,7 +50,7 @@ def getArgs():
 		printLog("Closing arguments.txt")
 		message ="""
 ##################################################################
-#                      End getArgs 	                             #
+#                      End getArgs                               #
 ##################################################################
 """
 		printLog(message)
@@ -63,7 +63,10 @@ def getArgs():
 		
 	else:
 	
-		print "Invalid command line argument", sys.argv[1]
-		print "Please use--preupgrade=, --postupgrade= or --techconsult="
+		printBoth("Invalid command line argument " + str(sys.argv[1]))
+		printBoth("Please use--preupgrade=, --postupgrade= or --techconsult=")
+		printLog("Terminating upgrade_tasks.py script")
 		sys.exit()
 ############### End getArgs() ###############	
+
+

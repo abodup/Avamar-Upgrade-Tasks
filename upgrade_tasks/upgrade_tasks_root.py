@@ -5,6 +5,27 @@ import sys
 import re
 from datetime import datetime
 
+
+
+
+############### Start main() ###############
+def main():
+	setupLog()
+	prePostTech, targetVersion , revNo, currentVersion = getArgs()
+	if prePostTech == "preUpgrade":
+		printBoth("Executing PreUpgrade Tasks")
+		preUpgradeTasks()
+	elif prePostTech == "postUpgrade":
+		printBoth("Executing PostUpgrade Tasks")
+		#preUpgradeTasks()
+	message ="""
+##################################################################
+#                  End upgrade_tasks.py Script                   #
+##################################################################
+"""
+	printLog(message)
+############### End main() ###############
+
 ############### Start getArgs() ###############
 def getArgs():
 	message ="""
@@ -75,24 +96,7 @@ def getArgs():
 		printLog("Terminating upgrade_tasks.py script")
 		sys.exit()
 ############### End getArgs() ###############	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-################# Helpers #################
-
+######################################## Helpers ###################################################
 ############### Start localTime() ###############
 from datetime import datetime
 ############### Start localTime() ###############
@@ -125,14 +129,4 @@ def printBoth(message):
 def printLog(message):
 	log.write("%s %s \n" %(localTime(), message))
 ############## Start printLog() ##############
-
-
-
-
-setupLog()
-prePostTech, targetVersion , revNo, currentVersion = getArgs()
-
-print prePostTech
-print targetVersion
-print revNo
-print currentVersion
+main()
