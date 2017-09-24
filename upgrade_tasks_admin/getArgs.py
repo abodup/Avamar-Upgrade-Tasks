@@ -24,7 +24,6 @@ def getArgs():
 		print "Missing Argument, please use --preupgrade=, --postupgrade= or --techconsult="
 		sys.exit()
 	
-	sys.exit
 	if sys.argv[1].startswith("--preupgrade="):
 		
 		#check the script has argument 2

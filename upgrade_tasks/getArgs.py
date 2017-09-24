@@ -1,35 +1,32 @@
-#!/usr/bin/python
-
-import os
-import sys
-import re
-
 ############### Start getArgs() ###############
 def getArgs():
-	
+	message ="""
+##################################################################
+#                      Start getArgs                             #
+##################################################################
+"""
+	printLog(message)
 	##### Get Current Version ###
-	logfile.write("%s Getting Current Version \n" %localTime())
+	printLog("Getting Current Version")
+	printLog("Command: rpm -qa | grep dpnserver")
 	f = os.popen("rpm -qa | grep dpnserver")
 	output = f.read()
-	logfile.write("%s Command: rpm -qa | grep dpnserver \n" %localTime())
-	logfile.write("%s Output: %s \n" %(localTime(), output))
-	
+	printLog("Output: %s" %output)
 	currentVersion= output.split("\n")[0].split("-",1)[1]
-	logfile.write("%s currentVersion = %s\n" %(localTime(), currentVersion))
-	
-	
-	
+	printLog("currentVersion = %s" %currentVersion)
 	#check the script has argument 1
 	if len(sys.argv) < 2:
-		print "Missing Argument, please use --preupgrade=, --postupgrade= or --techconsult="
+		
+		printBoth("Missing Argument, please use --preupgrade=, --postupgrade= or --techconsult=")
+		printLog("Terminating upgrade_tasks.py script")
 		sys.exit()
 	
-	sys.exit
 	if sys.argv[1].startswith("--preupgrade="):
-		
+		printLog("Using --preupgrade")
 		#check the script has argument 2
 		if len(sys.argv) < 3:
-			print "Missing Argument, please use --rev="
+			printBoth("Missing Argument, please use --rev=")
+			printLog("Terminating upgrade_tasks.py script")
 			sys.exit()
 		
 		prePostTech = "preUpgrade"
@@ -37,14 +34,26 @@ def getArgs():
 		## get Rev
 		if sys.argv[2].startswith("--rev="):
 			revNo = re.split('=', sys.argv[2])[1]
+			printLog("prePostTech = preUpgrade, Target Version = %s, revNo= %s" %(targetVersion, revNo))
 		else:
-			print "Invalid command line argument", sys.argv[2]	
-			print "with preupgrade you need to specify RCM revision package number with --rev="
+		
+			printBoth("Invalid command line argument" + str(sys,argv[2]))
+			printBoth("with preupgrade you need to specify RCM revision package number with --rev=")
+			printLog("Terminating upgrade_tasks.py script")
 			sys.exit()
 		
+		printLog("Createing arguments.txt file")
 		argsFile= open("arguments.txt", "w")
+		printLog("Writing upgrade_tasks script arguments to aruments.txt file")
 		argsFile.write("%s %s %s %s \n " %(prePostTech, targetVersion, revNo, currentVersion))
 		argsFile.close()
+		printLog("Closing arguments.txt")
+		message ="""
+##################################################################
+#                      End getArgs 	                             #
+##################################################################
+"""
+		printLog(message)
 		return(prePostTech, targetVersion , revNo, currentVersion)	
 	elif sys.argv[1].startswith("--postupgrade="):
 		prePostTech = "postUpgrade"
@@ -57,14 +66,4 @@ def getArgs():
 		print "Invalid command line argument", sys.argv[1]
 		print "Please use--preupgrade=, --postupgrade= or --techconsult="
 		sys.exit()
-	
-	
-############### End getArgs() ###############		
-
-prePostTech, targetVersion , revNo, currentVersion = getArgs()
-
-print prePostTech
-print targetVersion
-print revNo
-print currentVersion
-
+############### End getArgs() ###############	
