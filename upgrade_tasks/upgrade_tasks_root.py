@@ -14,7 +14,19 @@ def main():
 	prePostTech, targetVersion , revNo, currentVersion = getArgs()
 	if prePostTech == "preUpgrade":
 		printBoth("Executing PreUpgrade Tasks")
-		preUpgradeTasks()
+		#verifyRevNo is correct
+		#verify Files are present
+		latestProactiveCheck()
+		os.system("sudo -u admin /home/admin/proactive_check/proactive_check.pl "+arg)
+		f = os.popen('sudo -u cat hc_results.txt')
+		print "Health checks Results\n ", f.read()
+		question = """Depending on the output of the health checks, if the health checks are clean press yes to continue
+if health checks are not clean press no to exit"""
+		if not query_yes_no(question): sys.exit()
+		#stopBackupMaintSched()
+		#extraChecks()
+
+
 	elif prePostTech == "postUpgrade":
 		printBoth("Executing PostUpgrade Tasks")
 		#preUpgradeTasks()
@@ -96,6 +108,71 @@ def getArgs():
 		printLog("Terminating upgrade_tasks.py script")
 		sys.exit()
 ############### End getArgs() ###############	
+
+############### Start latestProactiveCheck() ###############
+def latestProactiveCheck():
+	message ="""
+##################################################################
+#                 Start latestProactiveCheck                     #
+##################################################################
+"""
+	printLog(message)
+	pcsLatestVersion = "4.52"
+	printBoth("Latest proactive_check.pl version is %s" %pcsLatestVersion)
+	if not os.path.isdir("/home/admin/proactive_check"):
+		printBoth("proactive_check directory doesn't exist")
+		os.makedirs("/home/admin/proactive_check")
+		printBoth("proactive_check directory created")
+	else: printBoth("Found proactive_check directory")
+	if not os.path.isfile("/home/admin/proactive_check/proactive_check.pl"):
+		printBoth("proactive_checks.pl doesn't exist")
+		printBoth("trying to download the latest proactive_check.pl")
+		printLog("Command: curl -o /home/admin/proactive_check/proactive_check.pl --disable-eprt -P - -O ftp://avamar_ftp:anonymous@ftp.avamar.com/software/scripts/proactive_check.pl")
+		os.system('curl -o /home/admin/proactive_check/proactive_check.pl --disable-eprt -P - -O ftp://avamar_ftp:anonymous@ftp.avamar.com/software/scripts/proactive_check.pl')
+		printLog("Command: chmod a+x /home/admin/proactive_check/proactive_check.pl")
+		os.system('chmod a+x /home/admin/proactive_check/proactive_check.pl')
+		
+		while not os.path.isfile("/home/admin/proactive_check/proactive_check.pl"):
+			printLog("Check if proactive_check.pl file is downloaded")
+			question = """couldn't download the latest proactive_checks.pl 
+Please copy the proactive_check.pl manually using vi
+Press yes when the proactive_check.pl is ready to continue or press no to quit"""
+			if not query_yes_no(question): sys.exit() 
+			
+		printBoth("Latest proactive_check.pl downloaded")
+	else:
+		printBoth("proactive_checks.pl already file exists")
+		printLog("Checking proactive_check.pl version is latest")
+		printLog("Command: /home/admin/proactive_check/proactive_check.pl --version")
+		f = os.popen('/home/admin/proactive_check/proactive_check.pl --version')
+		output = f.read()
+		printLog("Output: %s" %output)
+		if output[-5:-1] != pcsLatestVersion:
+			printBoth("proactive_check.pl script version is %s which is not the latest" %output[-5:-1])
+			printBoth("trying to download the latest proactive_check.pl")
+			os.system('curl -o /home/admin/proactive_check/proactive_check.pl --disable-eprt -P - -O -o /home/admin/proactive_check/proactive_check.pl ftp://avamar_ftp:anonymous@ftp.avamar.com/software/scripts/proactive_check.pl')
+			os.system('chmod a+x /home/admin/proactive_check/proactive_check.pl')
+			print "Latest proactive_check.pl downloaded"
+			while not os.path.isfile("/home/admin/proactive_check/proactive_check.pl"):
+				question = """couldn't download the latest proactive_checks.pl 
+Please copy the proactive_check.pl manually using vi
+Press yes when the proactive_check.pl is ready to continue or press no to quit"""
+				if not query_yes_no(question): sys.exit() 
+
+			print "Latest script is present"
+	message ="""
+##################################################################
+#                  End latestProactiveCheck                      #
+##################################################################
+"""
+	printLog(message)
+############### End latestProactiveCheck() ###############
+
+
+
+
+
+
 ######################################## Helpers ###################################################
 ############### Start localTime() ###############
 from datetime import datetime
