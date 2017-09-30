@@ -16,15 +16,15 @@ def stopBackupMaintSched():
 		print "Stopping Maintenence Scheduler"
 		os.system("dpnctl stop maint")
 	
-	f = os.popen("dpnctl status maint 2>&1")
-	lines = f.read().split('\n')
+	output = os.popen("dpnctl status maint 2>&1").read()
+	lines = output.split('\n')
 	schedStatus = False
 	while lines[-2].split()[-1]!= 'suspended.':
 		question = """couldn't stop the Maintenece scheduler
 please try manually and when done Press yes to continue or press no to quit"""
 		if not query_yes_no(question): sys.exit() 
-		f = os.popen("dpnctl status  2>&1")
-		lines = f.read().split('\n')	
+		output = os.popen("dpnctl status  2>&1").read()
+		lines = output.read().split('\n')	
 	
 	os.system("dpnctl stop sched")
 	f = os.popen("dpnctl status sched 2>&1")

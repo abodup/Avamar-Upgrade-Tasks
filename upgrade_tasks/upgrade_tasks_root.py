@@ -119,11 +119,13 @@ def latestProactiveCheck():
 	printLog(message)
 	pcsLatestVersion = "4.52"
 	printBoth("Latest proactive_check.pl version is %s" %pcsLatestVersion)
+	#Checking for proactive_check directory
 	if not os.path.isdir("/home/admin/proactive_check"):
 		printBoth("proactive_check directory doesn't exist")
 		os.makedirs("/home/admin/proactive_check")
 		printBoth("proactive_check directory created")
 	else: printBoth("Found proactive_check directory")
+	#Checking for proactive_check.pl file
 	if not os.path.isfile("/home/admin/proactive_check/proactive_check.pl"):
 		printBoth("proactive_checks.pl doesn't exist")
 		printBoth("trying to download the latest proactive_check.pl")
