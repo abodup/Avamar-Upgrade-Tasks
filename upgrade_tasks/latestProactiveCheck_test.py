@@ -13,60 +13,43 @@ def latestProactiveCheck():
 	pcsLatestVersion = "4.52"
 	if not os.path.isdir("/home/admin/proactive_check"):
 		printBoth("proactive_check directory doesn't exist")
-		printLog("Setting Effective user and group id to admin - 500")
-		os.seteuid(500)
-		os.setegid(500)
-		os.makedirs("/home/admin/proactive_check")
-		os.seteuid(0)
-		os.setegid(0)
+		cmd("mkdir /home/admin/proactive_check")
+		cmd("chown admin:admin /home/admin/proactive_check")
 		printBoth("proactive_check directory created")
-	else: printBoth("Found proactive_check directory")
+	else: printBoth("/home/admin/proactive_check/ directory exists")
 	if not os.path.isfile("/home/admin/proactive_check/proactive_check.pl"):
 		printBoth("proactive_checks.pl doesn't exist")
-		printBoth("trying to download the latest proactive_check.pl")
-		#add timeout and check if no ftp
-		output = cmdOut('sudo -u admin curl -o /home/admin/proactive_check/proactive_check.pl --disable-eprt --connect-timeout 30 -P - -O ftp://avamar_ftp:anonymous@ftp.avamar.com/software/scripts/proactive_check.pl 2>&1')
-		while output.split('\r')[-1].split(" ")[0] != '100':
-			printLog("Couldn't download proactive_check.pl, maybe ftp is not enabled")
+		curlFile("ftp://avamar_ftp:anonymous@ftp.avamar.com/software/scripts/proactive_check.pl", "/home/admin/proactive_check/proactive_check.pl", "admin")
+		while not os.path.isfile("/home/admin/proactive_check/proactive_check.pl"):
 			question = """couldn't download the latest proactive_checks.pl 
 Please copy the proactive_check.pl manually using vi
 Press yes when the proactive_check.pl is ready to continue or press no to quit"""
-			if not query_yes_no(question): sys.exit() 	
-		while not os.path.isfile("/home/admin/proactive_check/proactive_check.pl"):
-			printLog("Check if proactive_check.pl file is downloaded")
-			question = """can't find the latest proactive_checks.pl 
-Please copy the proactive_check.pl manually using vi
-Press yes when the proactive_check.pl is ready to continue or press no to quit"""
-			if not query_yes_no(question): sys.exit() 
-		
+			if not query_yes_no(question): sys.exit() 			
 		cmd('sudo -u admin chmod a+x /home/admin/proactive_check/proactive_check.pl')
-		printBoth("Latest proactive_check.pl downloaded")
 	else:
 		printBoth("proactive_checks.pl already file exists")
-		printLog("Checking proactive_check.pl version is latest")
+		printBoth("Checking proactive_check.pl owners")
+		output =cmdOut("ls -l /home/admin/proactive_check/proactive_check.pl")
+		if output.split(" ")[2] != 'admin' or output.split(" ")[3] != 'admin':
+			printBoth("Changing proactive_check.pl owner user and group to admin")
+			cmd("chown admin:admin /home/admin/proactive_check/proactive_check.pl")
+		cmd('sudo -u admin chmod a+x /home/admin/proactive_check/proactive_check.pl')
+		printBoth("Checking proactive_check.pl version is latest")
 		output = cmdOut('sudo -u admin /home/admin/proactive_check/proactive_check.pl --version')
 		printBoth("Latest proactive_check.pl version is %s" %pcsLatestVersion)
 		while output[-5:-1] != pcsLatestVersion:
 			printBoth("proactive_check.pl script version is %s which is not the latest" %output[-5:-1])
+			printBoth("Backing up proactive_check.pl file")
+			cmd("mv /home/admin/proactive_check/proactive_check.pl /home/admin/proactive_check/proactive_check.pl.%s" %localTime().replace(' ',''))
 			printBoth("trying to download the latest proactive_check.pl")
-			#add timeout and check if no ftp
-			output = cmdOut('sudo -u admin curl -o /home/admin/proactive_check/proactive_check.pl --disable-eprt --connect-timeout 30 -P - -O ftp://avamar_ftp:anonymous@ftp.avamar.com/software/scripts/proactive_check.pl 2>&1')
-			while output.split('\r')[-1].split(" ")[0] != '100':
-				printLog("Couldn't download proactive_check.pl, maybe ftp is not enabled")
+			curlFile("ftp://avamar_ftp:anonymous@ftp.avamar.com/software/scripts/proactive_check.pl", "/home/admin/proactive_check/proactive_check.pl", "admin")
+			while not os.path.isfile("/home/admin/proactive_check/proactive_check.pl"):
 				question = """couldn't download the latest proactive_checks.pl 
 Please copy the proactive_check.pl manually using vi
 Press yes when the proactive_check.pl is ready to continue or press no to quit"""
-				if not query_yes_no(question): sys.exit()
-			#PRINT SOMETHING		
-			while not os.path.isfile("/home/admin/proactive_check/proactive_check.pl"):
-				printLog("Check if proactive_check.pl file is downloaded")
-				question = """can't find the latest proactive_checks.pl 
-Please copy the proactive_check.pl manually using vi
-Press yes when the proactive_check.pl is ready to continue or press no to quit"""
-				if not query_yes_no(question): sys.exit()
-			output = cmdOut('sudo -u admin /home/admin/proactive_check/proactive_check.pl --version')
+				if not query_yes_no(question): sys.exit() 			
 			cmd('sudo -u admin chmod a+x /home/admin/proactive_check/proactive_check.pl')
-			printBoth("Latest proactive_check.pl downloaded")
+			output = cmdOut('sudo -u admin /home/admin/proactive_check/proactive_check.pl --version')
 		printBoth("proactive_check.pl script version is %s which is the latest" %output[-5:-1])
 		printBoth("Latest script is present")
 	message ="""
@@ -98,16 +81,21 @@ def setupLog():
 ##################################################################
 """
 	log.write("%s %s"%(localTime(), text))
+	log.close()
 ############### End setupLog() ####################
 
 ############## Start printLog() ##############
 def printLog(message):
+	log = open("./upgrade_tasks.log", "a")
 	log.write("%s %s \n" %(localTime(), message))
+	log.close()
 ############## Start printLog() ##############
 
 ############## Start printBoth() ##############
 def printBoth(message):
+	log = open("./upgrade_tasks.log", "a")
 	log.write("%s %s \n" %(localTime(), message))
+	log.close()
 	print message
 ############## End printBoth() ##############
 
@@ -125,6 +113,18 @@ def cmdOut(command):
 	return output
 ############### End cmdOut() ####################
 
+############### Start curlFile() ####################
+def curlFile(link, destinationFileName, user="root"):
+
+	printBoth("Trying to download %s to destination %s as user=%s" %(link, destinationFileName, user))
+	output = cmdOut('sudo -u %s curl -o %s --disable-eprt --connect-timeout 30 -P - -O %s 2>&1' %(user, destinationFileName, link))
+	if output.split('\r')[-1].split(" ")[0] == '100':
+		printBoth("Download Successful")
+		return True
+	else:
+		printBoth("Download not successful maybe FTP is not enabled on this Avamar server, or the Avamar Server is not connected to the internet")
+		return False
+############### End curlFile() ####################
 def test():
 	setupLog()
 	latestProactiveCheck()
