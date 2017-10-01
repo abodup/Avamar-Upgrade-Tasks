@@ -19,16 +19,21 @@ def setupLog():
 ##################################################################
 """
 	log.write("%s %s"%(localTime(), text))
+	log.close()
 ############### End setupLog() ####################
 
 ############## Start printLog() ##############
 def printLog(message):
+	log = open("./upgrade_tasks.log", "a")
 	log.write("%s %s \n" %(localTime(), message))
+	log.close()
 ############## Start printLog() ##############
 
 ############## Start printBoth() ##############
 def printBoth(message):
+	log = open("./upgrade_tasks.log", "a")
 	log.write("%s %s \n" %(localTime(), message))
+	log.close()
 	print message
 ############## End printBoth() ##############
 
@@ -46,6 +51,15 @@ def cmdOut(command):
 	return output
 ############### End cmdOut() ####################
 
+############### Start curlFile() ####################
+def curlFile(link, destinationFileName, user="root"):
+	#add timeout and check if no ftp
+	output = cmdOut('sudo -u %s curl -o %s --disable-eprt --connect-timeout 30 -P - -O %s 2>&1' %(user, destinationFileName, link))
+	if output.split('\r')[-1].split(" ")[0] == '100':
+		return True
+	else: return False
+############### End curlFile() ####################
+
 def helpersTest():
 	setupLog()
 	printLog("Print in log only, starting helpersTest()")
@@ -53,5 +67,6 @@ def helpersTest():
 	cmd("status.dpn")
 	output = cmdOut("dpnctl status 2>&1")
 	print output
-	
+	x= curlFile("ftp://avamar_ftp:anonymous@ftp.avamar.com/software/scripts/proactive_check.pl", "/home/admin/proactive_check/proactive_check.pl", "admin")
+	print x
 helpersTest()

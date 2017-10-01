@@ -9,14 +9,11 @@ def getArgs():
 	##### Get Current Version ###
 	printLog("Getting Current Version")
 	printLog("Command: rpm -qa | grep dpnserver")
-	f = os.popen("rpm -qa | grep dpnserver")
-	output = f.read()
-	printLog("Output: %s" %output)
-	currentVersion= output.split("\n")[0].split("-",1)[1]
+	output= cmdOut("rpm -qa | grep dpnserver")
+	currentVersion = output.split("\n")[0].split("-",1)[1]
 	printLog("currentVersion = %s" %currentVersion)
 	#check the script has argument 1
 	if len(sys.argv) < 2:
-		
 		printBoth("Missing Argument, please use --preupgrade=, --postupgrade= or --techconsult=")
 		printLog("Terminating upgrade_tasks.py script")
 		sys.exit()
@@ -36,7 +33,6 @@ def getArgs():
 			revNo = re.split('=', sys.argv[2])[1]
 			printLog("prePostTech = preUpgrade, Target Version = %s, revNo= %s" %(targetVersion, revNo))
 		else:
-		
 			printBoth("Invalid command line argument " + str(sys.argv[2]))
 			printBoth("with preupgrade you need to specify RCM revision package number with --rev=")
 			printLog("Terminating upgrade_tasks.py script")
