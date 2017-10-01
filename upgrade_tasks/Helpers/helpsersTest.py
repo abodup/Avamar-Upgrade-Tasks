@@ -48,6 +48,8 @@ def cmdOut(command):
 
 def helpersTest():
 	setupLog()
+	printLog("Print in log only, starting helpersTest()")
+	printBoth("print in both, starting helpersTest()")
 	cmd("status.dpn")
 	output = cmdOut("dpnctl status 2>&1")
 	print output
