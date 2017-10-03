@@ -11,7 +11,9 @@ from datetime import datetime
 ############### Start main() ###############
 def main():
 	setupLog()
-	prePostTech, targetVersion , revNo, currentVersion = getArgs()
+	prePostTech, targetVersion , currentVersion = getArgs()
+	#currentFamily - Peter
+	#targetFamily - Peter
 	if prePostTech == "preUpgrade":
 		printBoth("Executing PreUpgrade Tasks")
 		#verifyRevNo is correct
@@ -23,9 +25,11 @@ def main():
 		question = """Depending on the output of the health checks, if the health checks are clean press yes to continue
 if health checks are not clean press no to exit"""
 		if not query_yes_no(question): sys.exit()
+		avaimFULL, checksumFULL, avinstallerFile, upgradeFile, customerHandoverScript, UpgradeClientDownloads,  avaimRCM, checksumRCM, callableFixesMandatory, callableFixesOptional, notCallableFixesMandatory  = fileNames(targetVersion)
+		extractCopyAvps(currentFamily, currentVersion, targetFamily, targetVersion, avaimFULL, checksumFULL, avinstallerFile, upgradeFile, customerHandoverScript, UpgradeClientDownloads, avaimRCM, checksumRCM, callableFixesMandatory, callableFixesOptional, notCallableFixesMandatory)
 		#stopBackupMaintSched()
 		#extraChecks()
-
+		
 
 	elif prePostTech == "postUpgrade":
 		printBoth("Executing PostUpgrade Tasks")

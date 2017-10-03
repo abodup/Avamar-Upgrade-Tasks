@@ -25,7 +25,7 @@ def query_yes_no(question, default="yes"):
 		printLog("Stopping Question")
 		printBoth(question + prompt)
         choice = raw_input().lower()
-		printLog("Answer: %s" %choice)
+		printLog("Answer is: %s" %choice)
         if default is not None and choice == '':
             return valid[default]
         elif choice in valid:
