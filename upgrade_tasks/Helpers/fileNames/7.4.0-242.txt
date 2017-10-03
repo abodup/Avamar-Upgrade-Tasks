@@ -1,0 +1,8 @@
+total 1.1G
+drwxrwxr-x 2 dpn   502 4.0K Dec 16  2016 .
+drwx------ 3 root root   88 Sep 25 14:05 ..
+-rw-rw-r-- 1 dpn   502  78M Dec 20  2016 AdsGen4sPowerSupplyRedundancy-HF260924.avp
+-rw-rw-r-- 1 dpn   502   77 Dec 20  2016 AdsGen4sPowerSupplyRedundancy-HF260924.avp.md5sum
+-rw-rw-r-- 1 dpn   502 970M Dec 20  2016 AvPlatformOsRollup_2016-Q3-v3.avp
+-rw-rw-r-- 1 dpn   502   68 Dec 20  2016 AvPlatformOsRollup_2016-Q3-v3.avp.md5sum
+-rwxrwxr-x 1 dpn   502  31K Dec 20  2016 customer_handover_v5.4.sh

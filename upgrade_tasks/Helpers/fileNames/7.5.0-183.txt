@@ -1,0 +1,28 @@
+REV1
+total 970M
+drwxrwxr-x 3 dpn   502  149 Jun 26 11:38 .
+drwx------ 5 root root 4.0K Sep 25 14:25 ..
+-rw-rw-r-- 1 dpn   502 970M Jun 22 13:55 AvPlatformOsRollup_2016-Q4-v2.avp
+-rw-rw-r-- 1 dpn   502  100 Jun 22 13:55 AvPlatformOsRollup_2016-Q4-v2.avp.sha256sum
+-rwxrwxr-x 1 dpn   502  31K Jun 22 13:55 customer_handover_v5.4.sh
+drwxrwxr-x 2 dpn   502 4.0K Jun 26 18:21 only_if_needed
+
+REV2
+total 1.1G
+drwxrwxr-x 3 dpn   502  149 Jul 13 11:14 .
+drwx------ 5 root root 4.0K Sep 25 14:25 ..
+-rw-rw-r-- 1 dpn   502 1.1G Jul 10 15:26 AvPlatformOsRollup_2017-Q1-v9.avp
+-rw-rw-r-- 1 dpn   502  100 Jul 13 11:14 AvPlatformOsRollup_2017-Q1-v9.avp.sha256sum
+-rwxrwxr-x 1 dpn   502  31K Jul 10 15:24 customer_handover_v5.4.sh
+drwxrwxr-x 2 dpn   502 4.0K Jul 10 15:24 only_if_needed
+
+REV3
+total 1.2G
+drwxrwxr-x 3 dpn   502 4.0K Aug 29 10:39 .
+drwx------ 5 root root 4.0K Sep 25 14:25 ..
+-rw-rw-r-- 1 dpn   502 1.1G Aug 29 10:25 AvPlatformOsRollup_2017-Q1-v9.avp
+-rw-rw-r-- 1 dpn   502  100 Aug 29 10:25 AvPlatformOsRollup_2017-Q1-v9.avp.sha256sum
+-rwxrwxr-x 1 dpn   502  31K Aug 29 10:25 customer_handover_v5.4.sh
+drwxrwxr-x 2 dpn   502 4.0K Aug 29 10:25 only_if_needed
+-rw-rw-r-- 1 dpn   502 174M Aug 29 10:39 v7_5_0_183_mc_cumulative_201707.avp
+-rw-rw-r-- 1 dpn   502  102 Aug 29 10:39 v7_5_0_183_mc_cumulative_201707.avp.sha256
