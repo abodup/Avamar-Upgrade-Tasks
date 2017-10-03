@@ -43,7 +43,7 @@ def extractCopyAvps(currentFamily, currentVersion, targetFamily, targetVersion, 
 
 	length=0
 	while (length < len(callableFixesOptional)):
-		question = "would you like to add " + callableFixesOptional(length) + " with the server upgrade as a callable package?"
+		question = "would you like to add " + callableFixesOptional[length] + " with the server upgrade as a callable package?"
 		if query_yes_no(question):
 			cmd("mv /usr/local/avamar/src/" + callableFixesOptional[length] + " /data01/avamar/repo/packages")
 			printBoth(callableFixesOptional[length] + " is being moved now to /data01/avamar/repo/packages")

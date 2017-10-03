@@ -8,52 +8,22 @@ from datetime import datetime
 ############### Start main() ###############
 def main():
 	setupLog()
-	prePostTech = "preUpgrade" 
-	#prePostTech, targetVersion , currentVersion = getArgs()
-	#currentFamily - Peter
-	#targetFamily - Peter
-	if prePostTech == "preUpgrade":
-		printBoth("Executing PreUpgrade Tasks")
-		#verifyRevNo is correct
-		#verify Files are present
-		#latestProactiveCheck()
-		#cmd("sudo -u admin /home/admin/proactive_check/proactive_check.pl --preupgrade=%s" %targetVersion)
-		#output = os.popen('sudo -u cat hc_results.txt').read()
-		#printBoth("Health checks Results\n\n %s" %output)
-		#question = """Depending on the output of the health checks, if the health checks are clean press yes to continue
-#if health checks are not clean press no to exit"""
-		#if not query_yes_no(question): sys.exit()
-		#avaimFULL, checksumFULL, avinstallerFile, upgradeFile, customerHandoverScript, UpgradeClientDownloads,  avaimRCM, checksumRCM, callableFixesMandatory, callableFixesOptional, notCallableFixesMandatory  = fileNames(targetVersion)
-		
-		currentFamily = "7.2"
-		currentVersion = "7.2.1-32"
-		targetFamily = "7.4"
-		targetVersion = "7.4.1-32"
-		avaimFULL = "avaim_FULL_7.4.1-58_1.tgz"
-		checksumFULL = "896050a0b296fa9c5f78036e1a1b6238a464fd4ce8d49c6884aa998ae04e2b94"
-		avinstallerFile = "avaim_FULL_7.4.1-58_1/other_avps/UpgradeAvinstaller-7.4.1-58.avp"
-		upgradeFile = "avaim_FULL_7.4.1-58_1/mv2repo/AvamarUpgrade-7.4.1-58.avp"
-		customerHandoverScript = "avaim_RCM_Updates_7.4.1-58_Rev5/customer_handover_v5.4.sh"
-		UpgradeClientDownloads = "avaim_FULL_7.4.1-58_1/other_avps/UpgradeClientDownloads-7.4.1-58.avp"
-		avaimRCM = "avaim_RCM_Updates_7.4.1-58_Rev5.tgz" 
-		checksumRCM = "fca08b993e7479c122cd39248e94fbccc66a9cd430f347da329da170adf4c783"
-		callableFixesMandatory = ["avaim_RCM_Updates_7.4.1-58_Rev5/AvamarHotfix-7.4.1-58_HF278715.avp", "avaim_RCM_Updates_7.4.1-58_Rev5/v7_4_1_58_mc_cumulative_201707.avp", "avaim_RCM_Updates_7.4.1-58_Rev5/AvPlatformOsRollup_2017-Q1-v9.avp"]
-		callableFixesOptional = ["avaim_RCM_Updates_7.4.1-58_Rev5/only_if_needed/gen4s-ssd-1000day-hotfix-282000.avp", "avaim_RCM_Updates_7.4.1-58_Rev5/only_if_needed/Gen4tPlatformSupportUpdate-HF274401.avp", "avaim_RCM_Updates_7.4.1-58_Rev5/only_if_needed/AdsGen4sPowerSupplyRedundancy-HF260924.avp"]
-		notCallableFixesMandatory = ["avaim_RCM_Updates_7.4.1-58_Rev5/AvamarHotfix-7.4.1-58_HF278715.avp"]	
-		extractCopyAvps(currentFamily, currentVersion, targetFamily, targetVersion, avaimFULL, checksumFULL, avinstallerFile, upgradeFile, customerHandoverScript, UpgradeClientDownloads, avaimRCM, checksumRCM, callableFixesMandatory, callableFixesOptional, notCallableFixesMandatory)
-		#stopBackupMaintSched()
-		#extraChecks()
-		
-
-	elif prePostTech == "postUpgrade":
-		printBoth("Executing PostUpgrade Tasks")
-		#preUpgradeTasks()
-	message ="""
-##################################################################
-#                  End upgrade_tasks.py Script                   #
-##################################################################
-"""
-	printLog(message)
+	currentFamily = "7.2"
+	currentVersion = "7.2.1-32"
+	targetFamily = "7.4"
+	targetVersion = "7.4.1-32"
+	avaimFULL = "avaim_FULL_7.4.1-58_1.tgz"
+	checksumFULL = "896050a0b296fa9c5f78036e1a1b6238a464fd4ce8d49c6884aa998ae04e2b94"
+	avinstallerFile = "avaim_FULL_7.4.1-58_1/other_avps/UpgradeAvinstaller-7.4.1-58.avp"
+	upgradeFile = "avaim_FULL_7.4.1-58_1/mv2repo/AvamarUpgrade-7.4.1-58.avp"
+	customerHandoverScript = "avaim_RCM_Updates_7.4.1-58_Rev5/customer_handover_v5.4.sh"
+	UpgradeClientDownloads = "avaim_FULL_7.4.1-58_1/other_avps/UpgradeClientDownloads-7.4.1-58.avp"
+	avaimRCM = "avaim_RCM_Updates_7.4.1-58_Rev5.tgz" 
+	checksumRCM = "fca08b993e7479c122cd39248e94fbccc66a9cd430f347da329da170adf4c783"
+	callableFixesMandatory = ["avaim_RCM_Updates_7.4.1-58_Rev5/AvamarHotfix-7.4.1-58_HF278715.avp", "avaim_RCM_Updates_7.4.1-58_Rev5/v7_4_1_58_mc_cumulative_201707.avp", "avaim_RCM_Updates_7.4.1-58_Rev5/AvPlatformOsRollup_2017-Q1-v9.avp"]
+	callableFixesOptional = ["avaim_RCM_Updates_7.4.1-58_Rev5/only_if_needed/gen4s-ssd-1000day-hotfix-282000.avp", "avaim_RCM_Updates_7.4.1-58_Rev5/only_if_needed/Gen4tPlatformSupportUpdate-HF274401.avp", "avaim_RCM_Updates_7.4.1-58_Rev5/only_if_needed/AdsGen4sPowerSupplyRedundancy-HF260924.avp"]
+	notCallableFixesMandatory = ["avaim_RCM_Updates_7.4.1-58_Rev5/AvamarHotfix-7.4.1-58_HF278715.avp"]	
+	extractCopyAvps(currentFamily, currentVersion, targetFamily, targetVersion, avaimFULL, checksumFULL, avinstallerFile, upgradeFile, customerHandoverScript, UpgradeClientDownloads, avaimRCM, checksumRCM, callableFixesMandatory, callableFixesOptional, notCallableFixesMandatory)
 ############### End main() ###############
 
 ############### Start getArgs() ###############
@@ -201,7 +171,7 @@ def extractCopyAvps(currentFamily, currentVersion, targetFamily, targetVersion, 
 		printBoth(avinstallerFile + " File copied to Avinstaller Repo and ready, please go to GUI")
 		question = "whenever Avinstaller upgrade done please press yes to continue"
 		cond = True
-		while cond
+		while cond:
 			if query_yes_no(question):
 				if cmd("avinstaller.pl --version") == targetVersion:
 					printBoth("Avinstaller version checked and you can go to Avamar server upgrade")
@@ -233,7 +203,7 @@ def extractCopyAvps(currentFamily, currentVersion, targetFamily, targetVersion, 
 
 	length=0
 	while (length < len(callableFixesOptional)):
-		question = "would you like to add " + callableFixesOptional(length) + " with the server upgrade as a callable package?"
+		question = "would you like to add " + callableFixesOptional[length] + " with the server upgrade as a callable package?"
 		if query_yes_no(question):
 			cmd("mv /usr/local/avamar/src/" + callableFixesOptional[length] + " /data01/avamar/repo/packages")
 			printBoth(callableFixesOptional[length] + " is being moved now to /data01/avamar/repo/packages")
@@ -247,7 +217,7 @@ def clearRepo():
 	print "Checking if avinstaller repo is clear"
 	#check /data01/avamar/repo/tmp
 	if  len(os.listdir("/data01/avamar/repo/packages/")) > 0:
-		if os.path.isdir("/usr/local/avamar/src/oldAvps/") == False
+		if os.path.isdir("/usr/local/avamar/src/oldAvps/") == False:
 			os.mkdir("/usr/local/avamar/src/oldAvps/")
 			if os.path.isdir("/usr/local/avamar/src/oldAvps") == False:
 				printBoth("Can't create oldAvps directory to put avps currently present in the avinstaller in it")
@@ -294,6 +264,16 @@ def checkExtractPackage(package, packageChecksum):
 ############### End checkExtractPackage() ###############
 
 
+############### Start aviUpgradeNeeded() ###############
+def aviUpgradeNeeded(currentFamily, currentVersion, targetFamily, targetVersion):
+	if os.system("avinstaller.pl --version") == targetVersion:
+		return False
+	elif (currentFamily == "6.1" or currentFamily == "7.0" or currentVersion == "7.1.0-370") and (targetFamily == "7.1" or targetFamily == "7.2"):
+		return True
+	elif (currentFamily == "7.1") and (targetFamily == "7.3"):
+		return True
+	else: return False
+############### End aviUpgradeNeeded() ###############
 
 
 
@@ -304,9 +284,6 @@ def checkExtractPackage(package, packageChecksum):
 
 
 
-######################################## Helpers ###################################################
-############### Start localTime() ###############
-from datetime import datetime
 ############### Start localTime() ###############
 def localTime():
 	return str(datetime.now())
@@ -315,26 +292,93 @@ def localTime():
 ############### Start setupLog() ###############
 def setupLog():
 	global log 
-	os.system("touch ./tasks.log")
-	os.system("chmod a+rw tasks.log")
-	log = open("./tasks.log", "wa")
+	os.system("touch upgrade_tasks.log")
+	os.system("chmod a+rw upgrade_tasks.log")
+	log = open("./upgrade_tasks.log", "wa")
 	text = """
 ##################################################################
 #                      Log File Created                          #
 ##################################################################
 """
-	log.write("%s %s\n"%(localTime(), text))	
+	log.write("%s %s"%(localTime(), text))
+	log.close()
 ############### End setupLog() ####################
-
-
-############## Start printBoth() ##############
-def printBoth(message):
-	log.write("%s %s \n" %(localTime(), message))
-	print message
-############## End printBoth() ##############
 
 ############## Start printLog() ##############
 def printLog(message):
+	log = open("./upgrade_tasks.log", "a")
 	log.write("%s %s \n" %(localTime(), message))
+	log.close()
 ############## Start printLog() ##############
+
+############## Start printBoth() ##############
+def printBoth(message):
+	log = open("./upgrade_tasks.log", "a")
+	log.write("%s %s \n" %(localTime(), message))
+	log.close()
+	print message
+############## End printBoth() ##############
+
+############### Start cmd() ###############
+def cmd(command):
+		printLog("Command: %s" %command)
+		os.system(command)
+############### End cmd() ####################
+
+############### Start comdOut() ###############
+def cmdOut(command):
+	printLog("Command: %s" %command)
+	output = os.popen(command).read()
+	printLog("Output: %s" %output)
+	return output
+############### End cmdOut() ####################
+
+############### Start curlFile() ####################
+def curlFile(link, destinationFileName, user="root"):
+	#add timeout and check if no ftp
+	output = cmdOut('sudo -u %s curl -o %s --disable-eprt --connect-timeout 30 -P - -O %s 2>&1' %(user, destinationFileName, link))
+	if output.split('\r')[-1].split(" ")[0] == '100':
+		return True
+	else: return False
+############### End curlFile() ####################
+
+
+############### Start query_yes_no() ###############
+def query_yes_no(question, default="yes"):
+    """Ask a yes/no question via raw_input() and return their answer.
+
+    "question" is a string that is presented to the user.
+    "default" is the presumed answer if the user just hits <Enter>.
+        It must be "yes" (the default), "no" or None (meaning
+        an answer is required of the user).
+
+    The "answer" return value is True for "yes" or False for "no".
+    """
+    valid = {"yes": True, "y": True, "ye": True,
+             "no": False, "n": False}
+    if default is None:
+        prompt = " [y/n] "
+    elif default == "yes":
+        prompt = " [Y/n] "
+    elif default == "no":
+        prompt = " [y/N] "
+    else:
+        raise ValueError("invalid default answer: '%s'" % default)
+
+    while True:
+        #sys.stdout.write(question + prompt)
+		printLog("Stopping Question")
+		printBoth(question + prompt)
+		choice = raw_input().lower()
+		printLog("Answer is: %s" %choice)
+        if default is not None and choice == '':
+            return valid[default]
+        elif choice in valid:
+            return valid[choice]
+        else:
+            printBoth("Please respond with 'yes' or 'no'\n""(or 'y' or 'n').\n")
+            #sys.stdout.write("Please respond with 'yes' or 'no' "
+                          #"(or 'y' or 'n').\n")
+############### End query_yes_no() ###############
+
 main()

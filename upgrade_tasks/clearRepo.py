@@ -3,7 +3,7 @@ def clearRepo():
 	print "Checking if avinstaller repo is clear"
 	#check /data01/avamar/repo/tmp
 	if  len(os.listdir("/data01/avamar/repo/packages/")) > 0:
-		if os.path.isdir("/usr/local/avamar/src/oldAvps/") == False
+		if os.path.isdir("/usr/local/avamar/src/oldAvps/") == False:
 			os.mkdir("/usr/local/avamar/src/oldAvps/")
 			if os.path.isdir("/usr/local/avamar/src/oldAvps") == False:
 				printBoth("Can't create oldAvps directory to put avps currently present in the avinstaller in it")
