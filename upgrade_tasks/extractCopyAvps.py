@@ -2,8 +2,11 @@
 def extractCopyAvps(currentFamily, currentVersion, targetFamily, targetVersion, avaimFULL, checksumFULL, avinstallerFile, upgradeFile, customerHandoverScript, UpgradeClientDownloads, avaimRCM, checksumRCM, callableFixesMandatory, callableFixesOptional, notCallableFixesMandatory):
 		
 	clearRepo()
-	checkExtractPackage(avaimFULL, checksumFULL)
-	checkExtractPackage(avaimRCM, checksumRCM)
+	printBoth("Extracting " + avaimFULL)
+	cmd("tar xzvf /usr/local/avamar/src/%s -C /usr/local/avamar/src" %avaimFULL)	
+	printBoth("Extracting " + avaimRCM)
+	cmd("tar xzvf /usr/local/avamar/src/%s -C /usr/local/avamar/src" %avaimRCM)	
+	
 	
 	if aviUpgradeNeeded(currentFamily, currentVersion, targetFamily, targetVersion):
 		printBoth("Avinstaller upgrade is needed to " + targetVersion)

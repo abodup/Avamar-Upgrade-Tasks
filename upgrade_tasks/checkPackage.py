@@ -1,5 +1,5 @@
-############### Start checkExtractPackage() ###############
-def checkExtractPackage(package, packageChecksum):
+############### Start checkPackage() ###############
+def checkPackage(package, packageChecksum):
 	cond = False
 	while not cond:
 		### Check Package Exists
@@ -20,8 +20,4 @@ def checkExtractPackage(package, packageChecksum):
 			printBoth(package + " checksum is not correct")
 			question = "please download the %s file again, press yes to check for files again, or press no to abort" %package
 			if not query_yes_no(question): sys.exit()
-		
-	#### Extracting avaimFull
-	printBoth("Extracting " + package)
-	cmd("tar xzvf /usr/local/avamar/src/%s -C /usr/local/avamar/src" %package)
-############### End checkExtractPackage() ###############
+############### End checkPackage() ###############

@@ -1,48 +1,51 @@
 #!/usr/bin/python
 
 import os
-import sys
 import re
 from datetime import datetime
 
 ############### Start main() ###############
 def main():
+	
+	#Check User is root
+	checkRoot()
+	#output = os.popen("whoami").read()
 	setupLog()
-	prePostTech = "preUpgrade" 
-	#prePostTech, targetVersion , currentVersion = getArgs()
-	#currentFamily - Peter
-	#targetFamily - Peter
+	#Log the previous commands
+	#Check this is Avamar Utility Node
+	
+	prePostTech, targetVersion , currentVersion = getArgs()
+	
+	currentFamily = currentVersion[0:3]
+	targetFamily = targetVersion[0:3]
+	
 	if prePostTech == "preUpgrade":
 		printBoth("Executing PreUpgrade Tasks")
-		#verifyRevNo is correct
-		#verify Files are present
-		#latestProactiveCheck()
-		#cmd("sudo -u admin /home/admin/proactive_check/proactive_check.pl --preupgrade=%s" %targetVersion)
-		#output = os.popen('sudo -u cat hc_results.txt').read()
-		#printBoth("Health checks Results\n\n %s" %output)
-		#question = """Depending on the output of the health checks, if the health checks are clean press yes to continue
-#if health checks are not clean press no to exit"""
-		#if not query_yes_no(question): sys.exit()
-		#avaimFULL, checksumFULL, avinstallerFile, upgradeFile, customerHandoverScript, UpgradeClientDownloads,  avaimRCM, checksumRCM, callableFixesMandatory, callableFixesOptional, notCallableFixesMandatory  = fileNames(targetVersion)
+		avaimFULL, checksumFULL, avinstallerFile, upgradeFile, customerHandoverScript, UpgradeClientDownloads,  avaimRCM, checksumRCM, callableFixesMandatory, callableFixesOptional, notCallableFixesMandatory  = fileNames(targetVersion)
 		
-		currentFamily = "7.2"
-		currentVersion = "7.2.1-32"
-		targetFamily = "7.4"
-		targetVersion = "7.4.1-32"
-		avaimFULL = "avaim_FULL_7.4.1-58_1.tgz"
-		checksumFULL = "896050a0b296fa9c5f78036e1a1b6238a464fd4ce8d49c6884aa998ae04e2b94"
-		avinstallerFile = "avaim_FULL_7.4.1-58_1/other_avps/UpgradeAvinstaller-7.4.1-58.avp"
-		upgradeFile = "avaim_FULL_7.4.1-58_1/mv2repo/AvamarUpgrade-7.4.1-58.avp"
-		customerHandoverScript = "avaim_RCM_Updates_7.4.1-58_Rev5/customer_handover_v5.4.sh"
-		UpgradeClientDownloads = "avaim_FULL_7.4.1-58_1/other_avps/UpgradeClientDownloads-7.4.1-58.avp"
-		avaimRCM = "avaim_RCM_Updates_7.4.1-58_Rev5.tgz" 
-		checksumRCM = "fca08b993e7479c122cd39248e94fbccc66a9cd430f347da329da170adf4c783"
-		callableFixesMandatory = ["avaim_RCM_Updates_7.4.1-58_Rev5/AvamarHotfix-7.4.1-58_HF278715.avp", "avaim_RCM_Updates_7.4.1-58_Rev5/v7_4_1_58_mc_cumulative_201707.avp", "avaim_RCM_Updates_7.4.1-58_Rev5/AvPlatformOsRollup_2017-Q1-v9.avp"]
-		callableFixesOptional = ["avaim_RCM_Updates_7.4.1-58_Rev5/only_if_needed/gen4s-ssd-1000day-hotfix-282000.avp", "avaim_RCM_Updates_7.4.1-58_Rev5/only_if_needed/Gen4tPlatformSupportUpdate-HF274401.avp", "avaim_RCM_Updates_7.4.1-58_Rev5/only_if_needed/AdsGen4sPowerSupplyRedundancy-HF260924.avp"]
-		notCallableFixesMandatory = ["avaim_RCM_Updates_7.4.1-58_Rev5/AvamarHotfix-7.4.1-58_HF278715.avp"]	
+		checkPackages(avaimFULL, checksumFULL)
+		checkPackages(avaimRCM, checksumRCM)
+		
+		latestProactiveCheck()
+		## Check if we can redirect the output to the screen and upgrade_task.log
+		cmd("sudo -u admin /home/admin/proactive_check/proactive_check.pl --preupgrade=%s" %targetVersion)
+		
+		output = cmdOut('sudo -u cat hc_results.txt')
+		
+		# Check if user wants more details
+		print "Health checks Results\n\n %s" %output
+		question = """Depending on the output of the health checks, if the health checks are clean press yes to continue
+#if health checks are not clean press no to exit"""
+		if not query_yes_no(question): sys.exit()
+		
+		#Write hc_results in sr_notes.txt
+		
 		extractCopyAvps(currentFamily, currentVersion, targetFamily, targetVersion, avaimFULL, checksumFULL, avinstallerFile, upgradeFile, customerHandoverScript, UpgradeClientDownloads, avaimRCM, checksumRCM, callableFixesMandatory, callableFixesOptional, notCallableFixesMandatory)
-		#stopBackupMaintSched()
-		#extraChecks()
+		
+		#Write some output to sr_notes
+		#SMTP & SENDER to be written in temp files to check on the after the upgrade
+		stopBackupMaintSched()
+		extraChecks()
 		
 
 	elif prePostTech == "postUpgrade":
