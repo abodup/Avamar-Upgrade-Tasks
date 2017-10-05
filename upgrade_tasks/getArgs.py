@@ -50,7 +50,7 @@ def getArgs():
 ##################################################################
 """
 		printLog(message)
-		return(prePostTech, targetVersion , revNo, currentVersion)	
+		return(prePostTech, targetVersion , currentVersion)	
 	elif sys.argv[1].startswith("--postupgrade="):
 		prePostTech = "postUpgrade"
 		

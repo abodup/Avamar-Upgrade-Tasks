@@ -1,5 +1,11 @@
 ########################## Start fileNames() #############################
 def fileNames(targetVersion):
+	message ="""
+##################################################################
+#                       Start fileNames                          #
+##################################################################
+"""
+	printLog(message)
 	avaimFULL = ""
 	checksumFULL = ""
 	checksumFULL = ""
@@ -1330,6 +1336,11 @@ def fileNames(targetVersion):
 	
 	
 	########Return Paths for required packages########
-	
+	message ="""
+##################################################################
+#                       End fileNames                            #
+##################################################################
+"""
+	printLog(message)
 	return(avaimFULL, checksumFULL, avinstallerFile, upgradeFile, customerHandoverScript, UpgradeClientDownloads,  avaimRCM, checksumRCM, callableFixesMandatory, callableFixesOptional, notCallableFixesMandatory) 
 ###################### End fileNames() #######################################

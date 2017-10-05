@@ -1,17 +1,21 @@
-############## Start checkRoot() ##############
-checkRoot():
-	
-	output = cmdOut("whoami")
-	output = output.split("\n")[0]
-	if output != "root":
-		print"Error: please switch to root account and relaunch the script"
-		sys.exit()
-############## End checkRoot() ##############
+#!/usr/bin/python
+import os
+import sys
+
+from datetime import datetime
 
 ############### Start localTime() ###############
 def localTime():
 	return str(datetime.now())
 ############### End localTime() ###############
+############### Start getInput() ###############
+def getInput(question):
+
+	sys.stdout.write(question)
+	input = raw_input()
+	return input 
+    
+############### getInput() ###############
 
 ############### Start setupLog() ###############
 def setupLog():
@@ -46,7 +50,7 @@ def printBoth(message):
 ############### Start cmd() ###############
 def cmd(command):
 		printLog("Command: %s" %command)
-		os.system("%s 2>&1 | tee -a upgrade_tasks.log" %s)
+		os.system(command)
 ############### End cmd() ####################
 
 ############### Start comdOut() ###############
@@ -66,41 +70,46 @@ def curlFile(link, destinationFileName, user="root"):
 	else: return False
 ############### End curlFile() ####################
 
+############### Start extraChecks() ###############
 
-############### Start query_yes_no() ###############
-def query_yes_no(question, default="yes"):
-    """Ask a yes/no question via raw_input() and return their answer.
+def extraChecks():
+	
+	printBoth("Starting Extra Checks")
+	
+	printBoth("Checking Avamar Internal Root & MCUser Password")
+	passwd = False 
+	while not passwd:
+		rootPass = getInput("Enter Avamar Internal Root Password: ")
+		output = cmdOut("avmgr logn --id=root --password=%s 2>&1" %rootPass)
+		lines = output.split('\n')
+		if lines[0][0] == '1' : 
+			passwd = True
+			print "Correct Avamar Internal Root Password "
+			
+		else:
+			print "Incorrect Avamar Internal Root Password"
+	
+	passwd = False 
+	while not passwd:
+		MCUserPass = getInput("Enter MCUser Password: ")
+		output = cmdOut("avmgr logn --id=MCUser --password=%s 2>&1" %MCUserPass)
+		lines = output.split('\n')
+		if lines[0][0] == '1' : 
+			passwd = True
+			print "Correct Avamar MCUser Password "
+			
+		else:
+			printBoth("Incorrect Avamar MCUser Password")
 
-    "question" is a string that is presented to the user.
-    "default" is the presumed answer if the user just hits <Enter>.
-        It must be "yes" (the default), "no" or None (meaning
-        an answer is required of the user).
+	output = cmdOut("egrep 'smtp|sender' /usr/local/avamar/var/mc/server_data/prefs/mcserver.xml 2>&1")
+	smtp = output.split('\n')[0].split()[-2].split('=')[1].translate(None,'"')
+	sender = output.split('\n')[1].split()[-2].split('=')[1].translate(None,'"')
+	
+	printBoth("SMTP host is " + smtp)
+	printBoth("email sender is" + sender)
+	
+	
+	
+############### End extraChecks() ###############
 
-    The "answer" return value is True for "yes" or False for "no".
-    """
-    valid = {"yes": True, "y": True, "ye": True,
-             "no": False, "n": False}
-    if default is None:
-        prompt = " [y/n] "
-    elif default == "yes":
-        prompt = " [Y/n] "
-    elif default == "no":
-        prompt = " [y/N] "
-    else:
-        raise ValueError("invalid default answer: '%s'" % default)
-
-    while True:
-        #sys.stdout.write(question + prompt)
-		printLog("Stopping Question")
-		printBoth(question + prompt)
-        choice = raw_input().lower()
-		printLog("Answer is: %s" %choice)
-        if default is not None and choice == '':
-            return valid[default]
-        elif choice in valid:
-            return valid[choice]
-        else:
-            printBoth("Please respond with 'yes' or 'no'\n""(or 'y' or 'n').\n")
-            #sys.stdout.write("Please respond with 'yes' or 'no' "
-                          #"(or 'y' or 'n').\n")
-############### End query_yes_no() ###############
+extraChecks()
