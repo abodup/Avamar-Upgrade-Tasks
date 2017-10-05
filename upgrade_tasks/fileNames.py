@@ -30,7 +30,7 @@ def fileNames(targetVersion):
 		customerHandoverScript = "avaim_FULL_7.1.1-145_1/scripts/customer_handover_v5.0.sh"
 		UpgradeClientDownloads = "UpgradeClientDownloads-7.1.1-145.avp"
 		
-		output = cmdOut("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.1.1-145_Rev*")
+		output = cmdOut("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.1.1-145_Rev*tgz")
 		output = output.split("\n")
 		x = 0
 		new = []
@@ -71,7 +71,7 @@ def fileNames(targetVersion):
 				callableFixesOptional = ["AdsGen4sPowerSupplyRedundancy-HF199778.avp"]
 				notCallableFixesMandatory = ["v7_1_1_145_HF_229688.avp"]
 			else:
-				printBoth("Please download the latest Revision and try again."
+				printBoth("Please download the latest Revision and try again.")
 				sys.exit()				
 
 		elif revNo == "3":
@@ -253,7 +253,7 @@ def fileNames(targetVersion):
 		customerHandoverScript = "customer_handover_v5.1.sh"
 		UpgradeClientDownloads = "avaim_FULL_7.1.2-21_1/scripts/UpgradeClientDownloads-7.1.2-21.avp"
 		
-		output = cmdOut("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.1.2-21_Rev*")
+		output = cmdOut("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.1.2-21_Rev*tgz")
 		output = output.split("\n")
 		x = 0
 		new = []
@@ -476,7 +476,7 @@ def fileNames(targetVersion):
 		customerHandoverScript = "avaim_FULL_7.2.0-401_1/scripts/customer_handover_v5.1.sh"
 		UpgradeClientDownloads = "UpgradeClientDownloads-7.2.0-401.avp"
 		
-		output = cmdOut("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.2.0-401_Rev*")
+		output = cmdOut("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.2.0-401_Rev*tgz")
 		output = output.split("\n")
 		x = 0
 		new = []
@@ -674,7 +674,7 @@ def fileNames(targetVersion):
 		customerHandoverScript = "avaim_FULL_7.2.1-32_1/scripts/customer_handover_v5.2.sh"
 		UpgradeClientDownloads = "UpgradeClientDownloads-7.2.1-32.avp"
 		
-		output = cmdOut("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.2.1-32_Rev*")
+		output = cmdOut("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.2.1-32_Rev*tgz")
 		output = output.split("\n")
 		x = 0
 		new = []
@@ -872,7 +872,7 @@ def fileNames(targetVersion):
 		upgradeFile = "AvamarUpgrade-7.3.0-233.avp"
 		UpgradeClientDownloads = "UpgradeClientDownloads-7.3.0-233.avp"
 			
-		output = cmdOut("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.3.0-233_Rev*")
+		output = cmdOut("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.3.0-233_Rev*tgz")
 		output = output.split("\n")
 		x = 0
 		new = []
@@ -1022,7 +1022,7 @@ def fileNames(targetVersion):
 		upgradeFile = "AvamarUpgrade-7.3.1-125.avp"
 		UpgradeClientDownloads = "UpgradeClientDownloads-7.3.1-125.avp" 
 			
-		output = cmdOut("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.3.1-125_Rev*")
+		output = cmdOut("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.3.1-125_Rev*tgz")
 		output = output.split("\n")
 		x = 0
 		new = []
@@ -1145,7 +1145,7 @@ def fileNames(targetVersion):
 		upgradeFile = "AvamarUpgrade-7.4.0-242.avp"
 		UpgradeClientDownloads = "UpgradeClientDownloads-7.4.0-242.avp"
 			
-		output = cmdOut("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.4.0-242_Rev*")
+		output = cmdOut("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.4.0-242_Rev*tgz")
 		output = output.split("\n")
 		x = len(output)-2
 		new = []
@@ -1179,7 +1179,7 @@ def fileNames(targetVersion):
 		upgradeFile = "AvamarUpgrade-7.4.1-58.avp"
 		UpgradeClientDownloads = "UpgradeClientDownloads-7.4.1-58.avp"
 
-		output = cmdOut("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.4.1-58_Rev*")
+		output = cmdOut("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.4.1-58_Rev*tgz")
 		output = output.split("\n")
 		x = 0
 		new = []
@@ -1263,7 +1263,7 @@ def fileNames(targetVersion):
 		upgradeFile = "AvamarUpgrade-7.5.0-183.avp"
 		UpgradeClientDownloads = "UpgradeClientDownloads-7.5.0-183.avp"
 		
-		output = cmdOut("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.5.0-183_Rev*")
+		output = cmdOut("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.5.0-183_Rev*tgz")
 		output = output.split("\n")
 		x = 0
 		new = []

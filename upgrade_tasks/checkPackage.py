@@ -1,5 +1,5 @@
 ############### Start checkPackage() ###############
-def checkPackage(package, packageChecksum):
+def checkPackages(package, packageChecksum):
 	cond = False
 	while not cond:
 		### Check Package Exists

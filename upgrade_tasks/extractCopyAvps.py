@@ -14,7 +14,7 @@ def extractCopyAvps(currentFamily, currentVersion, targetFamily, targetVersion, 
 		printBoth(avinstallerFile + " File copied to Avinstaller Repo and ready, please go to GUI")
 		question = "whenever Avinstaller upgrade done please press yes to continue"
 		cond = True
-		while cond
+		while cond:
 			if query_yes_no(question):
 				if cmd("avinstaller.pl --version") == targetVersion:
 					printBoth("Avinstaller version checked and you can go to Avamar server upgrade")

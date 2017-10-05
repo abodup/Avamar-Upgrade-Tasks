@@ -1,5 +1,5 @@
 ############## Start checkRoot() ##############
-checkRoot():
+def checkRoot():
 	
 	output = cmdOut("whoami")
 	output = output.split("\n")[0]

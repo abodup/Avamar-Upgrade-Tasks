@@ -119,9 +119,29 @@ def getArgs():
 		sys.exit()
 ############### End getArgs() ###############	
 
-
-
-
+############### Start checkPackage() ###############
+def checkPackages(package, packageChecksum):
+	cond = False
+	while not cond:
+		### Check Package Exists
+		while not os.path.isfile("/usr/local/avamar/src/" + package):
+			printBoth(package + " File doesn't exists at /usr/local/avamar/src")
+			question = "please place the %s file under the specified location, press yes to continue or press no to abort" %package
+			if not query_yes_no(question): sys.exit()
+		printBoth(package + " File Found")
+		##### Checksum of the file ####
+		printBoth("checking Checksum of " + package)
+		output = cmdOut("sha256sum /usr/local/avamar/src/" + package)
+		checksum = output.split()[0]
+		printBoth(checksum)
+		if checksum == packageChecksum:
+			cond = True
+			printBoth(package + " checksum OK" )
+		else: 
+			printBoth(package + " checksum is not correct")
+			question = "please download the %s file again, press yes to check for files again, or press no to abort" %package
+			if not query_yes_no(question): sys.exit()
+############### End checkPackage() ###############
 
 ############### Start latestProactiveCheck() ###############
 def latestProactiveCheck():
@@ -275,36 +295,53 @@ def aviUpgradeNeeded(currentFamily, currentVersion, targetFamily, targetVersion)
 		return True
 	else: return False
 ############### End aviUpgradeNeeded() ###############
-		
-		
-		
-############### Start checkExtractPackage() ###############
-def checkExtractPackage(package, packageChecksum):
-	cond = False
-	while not cond:
-		### Check Package Exists
-		while not os.path.isfile("/usr/local/avamar/src/" + package):
-			printBoth(package + " File doesn't exists at /usr/local/avamar/src")
-			question = "please place the %s file under the specified location, press yes to continue or press no to abort" %package
-			if not query_yes_no(question): sys.exit()
-		printBoth(package + " File Found")
-		##### Checksum of the file ####
-		printBoth("checking Checksum of " + package)
-		output = cmdOut("sha256sum /usr/local/avamar/src/" + package)
-		checksum = output.split()[0]
-		printBoth(checksum)
-		if checksum == packageChecksum:
-			cond = True
-			printBoth(package + " checksum OK" )
-		else: 
-			printBoth(package + " checksum is not correct")
-			question = "please download the %s file again, press yes to check for files again, or press no to abort" %package
-			if not query_yes_no(question): sys.exit()
-		
-	#### Extracting avaimFull
-	printBoth("Extracting " + package)
-	cmd("tar xzvf /usr/local/avamar/src/%s -C /usr/local/avamar/src" %package)
-############### End checkExtractPackage() ###############
+
+############### Start stopBackupMaintSched() ###############
+
+def stopBackupMaintSched():
+	
+	message ="""
+##################################################################
+#                 Start stopBackupMaintSched                     #
+##################################################################
+"""
+	printLog(message)
+	# check if maintenence activities are running
+	printBoth("check if maintenence activities are running")
+	output = cmdOut("sudo -u admin status.dpn | egrep -A 2 checkpoint")
+	lines = output.split('\n')
+	if lines[0][-3:-1] == 'OK':
+		printBoth("checkpoint 'OK'")
+	if lines[1][-3:-1] == 'OK':
+		printBoth("GC 'OK'")
+	if lines[0][-3:-1] == 'OK':
+		printBoth("hfscheck 'OK'")
+	if (lines[0][-3:-1] == 'OK') and (lines[1][-3:-1] == 'OK') and (lines[2][-3:-1] == 'OK'):
+		printBoth("Stopping Maintenence Scheduler")
+		cmdOut("sudo -u admin dpnctl stop maint")
+	output = cmdOut("sudo -u admin dpnctl status maint 2>&1")
+	while output.split('\n')[-2].split()[-1]!= 'suspended.':
+		question = """couldn't stop the Maintenece scheduler
+please try manually and when done Press yes to continue or press no to quit"""
+		if not query_yes_no(question): sys.exit() 
+		output = cmdOut("sudo -u admin dpnctl status  2>&1")	
+	
+	printBoth("Stopping Backup Scheduler")
+	cmdOut("sudo -u admin dpnctl stop sched")
+	output = cmdOut("sudo -u admin dpnctl status sched 2>&1")
+	while output.split('\n')[-2].split()[-1]!= 'down.':
+		question = """couldn't stop the Backup scheduler
+please try manually and when done Press yes to continue or press no to quit"""
+		if not query_yes_no(question): sys.exit() 
+		output = cmdOut("sudo -u admin dpnctl status sched 2>&1")
+		printBoth("Backup and Maintenence schedulers are down")
+	message ="""
+##################################################################
+#                  End latestProactiveCheck                      #
+##################################################################
+"""
+	printLog(message)
+############### End stopBackupMaintSched() ###############
 
 ############### Start extraSteps() ###############
 def extraSteps():
@@ -406,11 +443,15 @@ def cmdOut(command):
 
 ############### Start curlFile() ####################
 def curlFile(link, destinationFileName, user="root"):
-	#add timeout and check if no ftp
+
+	printBoth("Trying to download %s to destination %s as user=%s" %(link, destinationFileName, user))
 	output = cmdOut('sudo -u %s curl -o %s --disable-eprt --connect-timeout 30 -P - -O %s 2>&1' %(user, destinationFileName, link))
 	if output.split('\r')[-1].split(" ")[0] == '100':
+		printBoth("Download Successful")
 		return True
-	else: return False
+	else:
+		printBoth("Download not successful maybe FTP is not enabled on this Avamar server, or the Avamar Server is not connected to the internet")
+		return False
 ############### End curlFile() ####################
 
 ############### Start query_yes_no() ###############
@@ -1801,34 +1842,4 @@ def fileNames(targetVersion):
 	printLog(message)
 	return(avaimFULL, checksumFULL, avinstallerFile, upgradeFile, customerHandoverScript, UpgradeClientDownloads,  avaimRCM, checksumRCM, callableFixesMandatory, callableFixesOptional, notCallableFixesMandatory) 
 ###################### End fileNames() #######################################
-
-
-
-
-
-############### Start checkPackage() ###############
-def checkPackages(package, packageChecksum):
-	cond = False
-	while not cond:
-		### Check Package Exists
-		while not os.path.isfile("/usr/local/avamar/src/" + package):
-			printBoth(package + " File doesn't exists at /usr/local/avamar/src")
-			question = "please place the %s file under the specified location, press yes to continue or press no to abort" %package
-			if not query_yes_no(question): sys.exit()
-		printBoth(package + " File Found")
-		##### Checksum of the file ####
-		printBoth("checking Checksum of " + package)
-		output = cmdOut("sha256sum /usr/local/avamar/src/" + package)
-		checksum = output.split()[0]
-		printBoth(checksum)
-		if checksum == packageChecksum:
-			cond = True
-			printBoth(package + " checksum OK" )
-		else: 
-			printBoth(package + " checksum is not correct")
-			question = "please download the %s file again, press yes to check for files again, or press no to abort" %package
-			if not query_yes_no(question): sys.exit()
-############### End checkPackage() ###############
-
-
 main()

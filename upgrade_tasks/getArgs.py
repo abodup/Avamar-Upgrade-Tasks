@@ -1,4 +1,3 @@
-############### Start getArgs() ###############
 def getArgs():
 	message ="""
 ##################################################################
@@ -64,5 +63,3 @@ def getArgs():
 		printLog("Terminating upgrade_tasks.py script")
 		sys.exit()
 ############### End getArgs() ###############	
-
-

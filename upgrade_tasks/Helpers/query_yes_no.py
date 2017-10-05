@@ -1,4 +1,3 @@
-############### Start query_yes_no() ###############
 def query_yes_no(question, default="yes"):
     """Ask a yes/no question via raw_input() and return their answer.
 
@@ -24,14 +23,14 @@ def query_yes_no(question, default="yes"):
         #sys.stdout.write(question + prompt)
 		printLog("Stopping Question")
 		printBoth(question + prompt)
-        choice = raw_input().lower()
+		choice = raw_input().lower()
 		printLog("Answer is: %s" %choice)
-        if default is not None and choice == '':
-            return valid[default]
-        elif choice in valid:
-            return valid[choice]
-        else:
-            printBoth("Please respond with 'yes' or 'no'\n""(or 'y' or 'n').\n")
-            #sys.stdout.write("Please respond with 'yes' or 'no' "
+		if default is not None and choice == '':
+			return valid[default]
+		elif choice in valid:
+			return valid[choice]
+		else:
+			printBoth("Please respond with 'yes' or 'no'\n""(or 'y' or 'n').\n")
+			#sys.stdout.write("Please respond with 'yes' or 'no' "
                           #"(or 'y' or 'n').\n")
 ############### End query_yes_no() ###############

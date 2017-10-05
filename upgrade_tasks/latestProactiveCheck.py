@@ -8,63 +8,49 @@ def latestProactiveCheck():
 	printLog(message)
 	pcsLatestVersion = "4.52"
 	printBoth("Latest proactive_check.pl version is %s" %pcsLatestVersion)
+	#Checking for proactive_check directory
 	if not os.path.isdir("/home/admin/proactive_check"):
 		printBoth("proactive_check directory doesn't exist")
-		printLog("Setting Effective user and group id to admin - 500")
-		os.seteuid(500)
-		os.setegid(500)
 		os.makedirs("/home/admin/proactive_check")
-		os.seteuid(0)
-		os.setegid(0)
 		printBoth("proactive_check directory created")
 	else: printBoth("Found proactive_check directory")
+	#Checking for proactive_check.pl file
 	if not os.path.isfile("/home/admin/proactive_check/proactive_check.pl"):
 		printBoth("proactive_checks.pl doesn't exist")
 		printBoth("trying to download the latest proactive_check.pl")
-		#add timeout and check if no ftp
-		output = cmdOut('sudo -u admin curl -o /home/admin/proactive_check/proactive_check.pl --disable-eprt --connect-timeout 30 -P - -O ftp://avamar_ftp:anonymous@ftp.avamar.com/software/scripts/proactive_check.pl 2>&1')
-		while output.split('\r')[-1].split(" ")[0] != '100'
-			printLog("Couldn't download proactive_check.pl, maybe ftp is not enabled")
+		printLog("Command: curl -o /home/admin/proactive_check/proactive_check.pl --disable-eprt -P - -O ftp://avamar_ftp:anonymous@ftp.avamar.com/software/scripts/proactive_check.pl")
+		os.system('curl -o /home/admin/proactive_check/proactive_check.pl --disable-eprt -P - -O ftp://avamar_ftp:anonymous@ftp.avamar.com/software/scripts/proactive_check.pl')
+		printLog("Command: chmod a+x /home/admin/proactive_check/proactive_check.pl")
+		os.system('chmod a+x /home/admin/proactive_check/proactive_check.pl')
+		
+		while not os.path.isfile("/home/admin/proactive_check/proactive_check.pl"):
+			printLog("Check if proactive_check.pl file is downloaded")
 			question = """couldn't download the latest proactive_checks.pl 
 Please copy the proactive_check.pl manually using vi
 Press yes when the proactive_check.pl is ready to continue or press no to quit"""
-			if not query_yes_no(question): sys.exit() 	
-		while not os.path.isfile("/home/admin/proactive_check/proactive_check.pl"):
-			printLog("Check if proactive_check.pl file is downloaded")
-			question = """can't find the latest proactive_checks.pl 
-Please copy the proactive_check.pl manually using vi
-Press yes when the proactive_check.pl is ready to continue or press no to quit"""
 			if not query_yes_no(question): sys.exit() 
-		
-		cmd('sudo -u admin chmod a+x /home/admin/proactive_check/proactive_check.pl')
+			
 		printBoth("Latest proactive_check.pl downloaded")
 	else:
 		printBoth("proactive_checks.pl already file exists")
 		printLog("Checking proactive_check.pl version is latest")
-		printLog("Command: sudo -u admin /home/admin/proactive_check/proactive_check.pl --version")
-		output = cmdOut('sudo -u admin /home/admin/proactive_check/proactive_check.pl --version')
-		while output[-5:-1] != pcsLatestVersion:
+		printLog("Command: /home/admin/proactive_check/proactive_check.pl --version")
+		f = os.popen('/home/admin/proactive_check/proactive_check.pl --version')
+		output = f.read()
+		printLog("Output: %s" %output)
+		if output[-5:-1] != pcsLatestVersion:
 			printBoth("proactive_check.pl script version is %s which is not the latest" %output[-5:-1])
 			printBoth("trying to download the latest proactive_check.pl")
-			#add timeout and check if no ftp
-			output = cmdOut('sudo -u admin curl -o /home/admin/proactive_check/proactive_check.pl --disable-eprt --connect-timeout 30 -P - -O ftp://avamar_ftp:anonymous@ftp.avamar.com/software/scripts/proactive_check.pl 2>&1')
-			while output.split('\r')[-1].split(" ")[0] != '100'
-				printLog("Couldn't download proactive_check.pl, maybe ftp is not enabled")
+			os.system('curl -o /home/admin/proactive_check/proactive_check.pl --disable-eprt -P - -O -o /home/admin/proactive_check/proactive_check.pl ftp://avamar_ftp:anonymous@ftp.avamar.com/software/scripts/proactive_check.pl')
+			os.system('chmod a+x /home/admin/proactive_check/proactive_check.pl')
+			print "Latest proactive_check.pl downloaded"
+			while not os.path.isfile("/home/admin/proactive_check/proactive_check.pl"):
 				question = """couldn't download the latest proactive_checks.pl 
 Please copy the proactive_check.pl manually using vi
 Press yes when the proactive_check.pl is ready to continue or press no to quit"""
-				if not query_yes_no(question): sys.exit() 	
-			while not os.path.isfile("/home/admin/proactive_check/proactive_check.pl"):
-				printLog("Check if proactive_check.pl file is downloaded")
-				question = """can't find the latest proactive_checks.pl 
-Please copy the proactive_check.pl manually using vi
-Press yes when the proactive_check.pl is ready to continue or press no to quit"""
 				if not query_yes_no(question): sys.exit() 
-			
-			cmd('sudo -u admin chmod a+x /home/admin/proactive_check/proactive_check.pl')
-			printBoth("Latest proactive_check.pl downloaded")
-	
-			printBoth("Latest script is present")
+
+			print "Latest script is present"
 	message ="""
 ##################################################################
 #                  End latestProactiveCheck                      #
