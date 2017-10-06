@@ -104,3 +104,12 @@ def query_yes_no(question, default="yes"):
             #sys.stdout.write("Please respond with 'yes' or 'no' "
                           #"(or 'y' or 'n').\n")
 ############### End query_yes_no() ###############
+
+############### Start getInput() ###############
+def getInput(question):
+
+	sys.stdout.write(question)
+	input = raw_input()
+	return input 
+    
+############### getInput() ###############

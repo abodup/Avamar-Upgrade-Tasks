@@ -1,3 +1,4 @@
+############### Start getArgs() ###############	
 def getArgs():
 	message ="""
 ##################################################################
@@ -18,29 +19,13 @@ def getArgs():
 		sys.exit()
 	
 	if sys.argv[1].startswith("--preupgrade="):
-		printLog("Using --preupgrade")
-		#check the script has argument 2
-		if len(sys.argv) < 3:
-			printBoth("Missing Argument, please use --rev=")
-			printLog("Terminating upgrade_tasks.py script")
-			sys.exit()
-		
+		printLog("Using --preupgrade")		
 		prePostTech = "preUpgrade"
-		targetVersion = re.split('=', sys.argv[1])[1]
-		## get Rev
-		if sys.argv[2].startswith("--rev="):
-			revNo = re.split('=', sys.argv[2])[1]
-			printLog("prePostTech = preUpgrade, Target Version = %s, revNo= %s" %(targetVersion, revNo))
-		else:
-			printBoth("Invalid command line argument " + str(sys.argv[2]))
-			printBoth("with preupgrade you need to specify RCM revision package number with --rev=")
-			printLog("Terminating upgrade_tasks.py script")
-			sys.exit()
-		
+		targetVersion = re.split('=', sys.argv[1])[1]		
 		printLog("Createing arguments.txt file")
 		argsFile= open("arguments.txt", "w")
 		printLog("Writing upgrade_tasks script arguments to aruments.txt file")
-		argsFile.write("%s %s %s %s \n " %(prePostTech, targetVersion, revNo, currentVersion))
+		argsFile.write("%s %s %s \n " %(prePostTech, targetVersion, currentVersion))
 		argsFile.close()
 		printLog("Closing arguments.txt")
 		message ="""

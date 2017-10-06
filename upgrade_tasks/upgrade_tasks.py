@@ -22,11 +22,18 @@ def main():
 	if prePostTech == "preUpgrade":
 		printBoth("Executing PreUpgrade Tasks")
 		avaimFULL, checksumFULL, avinstallerFile, upgradeFile, customerHandoverScript, UpgradeClientDownloads,  avaimRCM, checksumRCM, callableFixesMandatory, callableFixesOptional, notCallableFixesMandatory  = fileNames(targetVersion)
-		checkPackages(avaimFULL, checksumFULL)
-		checkPackages(avaimRCM, checksumRCM)		
+		#checkPackages(targetFamily, False, avaimFULL, checksumFULL)
+		#checkPackages(targetFamily, True, avaimRCM, checksumRCM)		
 		latestProactiveCheck()
+		cmd("chmod 777 /home/admin/upgrade_tasks/")
+		cmd("touch /home/admin/upgrade_tasks/hc_proactive_check.log")
+		cmd("chown admin:admin /home/admin/upgrade_tasks/hc_proactive_check.log")
+		cmd("chmod 777 /home/admin/upgrade_tasks/hc_proactive_check.log")	
+		cmd("touch /home/admin/upgrade_tasks/hc_results.log")
+		cmd("chown admin:admin /home/admin/upgrade_tasks/hc_results.log")
+		cmd("chmod 777 /home/admin/upgrade_tasks/hc_results.log")
 		cmd("sudo -u admin /home/admin/proactive_check/proactive_check.pl --preupgrade=%s" %targetVersion)
-		output = cmdOut('sudo -u cat hc_results.txt')
+		output = cmdOut('sudo -u admin cat hc_results.txt')
 		# Check if user wants more details
 		print "Health checks Results\n\n %s" %output
 		question = """Depending on the output of the health checks, if the health checks are clean press yes to continue
@@ -38,7 +45,7 @@ def main():
 		#Write some output to sr_notes
 		#SMTP & SENDER to be written in temp files to check on the after the upgrade
 		stopBackupMaintSched()
-		extraChecks()
+		extraSteps()
 		
 
 	elif prePostTech == "postUpgrade":
@@ -52,7 +59,7 @@ def main():
 	printLog(message)
 ############### End main() ###############
 
-############### Start getArgs() ###############
+############### Start getArgs() ###############	
 def getArgs():
 	message ="""
 ##################################################################
@@ -73,29 +80,13 @@ def getArgs():
 		sys.exit()
 	
 	if sys.argv[1].startswith("--preupgrade="):
-		printLog("Using --preupgrade")
-		#check the script has argument 2
-		if len(sys.argv) < 3:
-			printBoth("Missing Argument, please use --rev=")
-			printLog("Terminating upgrade_tasks.py script")
-			sys.exit()
-		
+		printLog("Using --preupgrade")		
 		prePostTech = "preUpgrade"
-		targetVersion = re.split('=', sys.argv[1])[1]
-		## get Rev
-		if sys.argv[2].startswith("--rev="):
-			revNo = re.split('=', sys.argv[2])[1]
-			printLog("prePostTech = preUpgrade, Target Version = %s, revNo= %s" %(targetVersion, revNo))
-		else:
-			printBoth("Invalid command line argument " + str(sys.argv[2]))
-			printBoth("with preupgrade you need to specify RCM revision package number with --rev=")
-			printLog("Terminating upgrade_tasks.py script")
-			sys.exit()
-		
+		targetVersion = re.split('=', sys.argv[1])[1]		
 		printLog("Createing arguments.txt file")
 		argsFile= open("arguments.txt", "w")
 		printLog("Writing upgrade_tasks script arguments to aruments.txt file")
-		argsFile.write("%s %s %s %s \n " %(prePostTech, targetVersion, revNo, currentVersion))
+		argsFile.write("%s %s %s \n " %(prePostTech, targetVersion, currentVersion))
 		argsFile.close()
 		printLog("Closing arguments.txt")
 		message ="""
@@ -120,7 +111,7 @@ def getArgs():
 ############### End getArgs() ###############	
 
 ############### Start checkPackage() ###############
-def checkPackages(package, packageChecksum):
+def checkPackages(targetFamily, rev , package, packageChecksum):
 	cond = False
 	while not cond:
 		### Check Package Exists
@@ -131,7 +122,12 @@ def checkPackages(package, packageChecksum):
 		printBoth(package + " File Found")
 		##### Checksum of the file ####
 		printBoth("checking Checksum of " + package)
-		output = cmdOut("sha256sum /usr/local/avamar/src/" + package)
+		if rev==True:
+			output = cmdOut("sha256sum /usr/local/avamar/src/" + package)
+		else:
+			if targetFamily == '7.4' or targetFamily == '7.5':
+				output = cmdOut("sha256sum /usr/local/avamar/src/" + package)
+			else: output = cmdOut("md5sum /usr/local/avamar/src/" + package)
 		checksum = output.split()[0]
 		printBoth(checksum)
 		if checksum == packageChecksum:
@@ -206,35 +202,37 @@ Press yes when the proactive_check.pl is ready to continue or press no to quit""
 
 ############### Start extractCopyAvps() ###############
 def extractCopyAvps(currentFamily, currentVersion, targetFamily, targetVersion, avaimFULL, checksumFULL, avinstallerFile, upgradeFile, customerHandoverScript, UpgradeClientDownloads, avaimRCM, checksumRCM, callableFixesMandatory, callableFixesOptional, notCallableFixesMandatory):
-		
+	message ="""
+##################################################################
+#                      Start extractCopyAvps                     #
+##################################################################
+"""
+	printLog(message)
+	
 	clearRepo()
 	printBoth("Extracting " + avaimFULL)
 	cmd("tar xzvf /usr/local/avamar/src/%s -C /usr/local/avamar/src" %avaimFULL)	
 	printBoth("Extracting " + avaimRCM)
 	cmd("tar xzvf /usr/local/avamar/src/%s -C /usr/local/avamar/src" %avaimRCM)	
 	
-	
 	if aviUpgradeNeeded(currentFamily, currentVersion, targetFamily, targetVersion):
-		printBoth("Avinstaller upgrade is needed to " + targetVersion)
 		cmd("mv /usr/local/avamar/src/" + avinstallerFile + " /data01/avamar/repo/packages")
+		
+	while aviUpgradeNeeded(currentFamily, currentVersion, targetFamily, targetVersion):
+		printBoth("Avinstaller upgrade is needed to " + targetVersion)
 		printBoth(avinstallerFile + " File copied to Avinstaller Repo and ready, please go to GUI")
 		question = "whenever Avinstaller upgrade done please press yes to continue"
-		cond = True
-		while cond:
-			if query_yes_no(question):
-				if cmd("avinstaller.pl --version") == targetVersion:
-					printBoth("Avinstaller version checked and you can go to Avamar server upgrade")
-					cond = False
-				else: printBoth("please check the Avinstaller upgrade again")
-			else: printBoth("please check the Avinstaller upgrade again")
-	else:
-		printBoth("You can go to Avamar server upgrade")
+		query_yes_no(question)
+			
+	printBoth("You can go to Avamar server upgrade")
 	
 	cmd("mv /usr/local/avamar/src/" + upgradeFile + " /data01/avamar/repo/packages")
 	printBoth(upgradeFile + " is being moved now to /data01/avamar/repo/packages")
 	
 	clientVer = cmdOut("ls /usr/local/avamar/var/avi/server_data/package_data/ | grep UpgradeClientDownloads-")
-	clientVer1 = clientVer.split("_")[0].split("-",1)[1][0:-4]
+	if clientVer: 
+		clientVer1 = clientVer.split("_")[0].split("-",1)[1][0:-4]
+	else: clientVer1 = clientVer
 	#UpgradeClientDownloads-7.2.1-32.avp_1496764981077 -> UpgradeClientDownloads-7.2.1-32.avp -> 7.2.1-32.avp -> 7.2.1-32
 	if clientVer1 != targetVersion:
 		question = "UpgradeClientDownloads pacakge needed, if you would like to add it now with server upgrade, please press yes."
@@ -258,6 +256,12 @@ def extractCopyAvps(currentFamily, currentVersion, targetFamily, targetVersion, 
 			printBoth(callableFixesOptional[length] + " is being moved now to /data01/avamar/repo/packages")
 			length += 1
 		else: length += 1
+	message ="""
+##################################################################
+#                      End extractCopyAvps                       #
+##################################################################
+"""
+	printLog(message)
 ############### End extractCopyAvps() ##########################################
 		
 
@@ -273,7 +277,7 @@ def clearRepo():
 				printBoth("Print please Consult with RPS SME to clear the Avinstaller Repo")
 				sys.exit()
 	
-			os.system("mv /data01/avamar/repo/packages/* /usr/local/avamar/src/oldAvps")
+			cmd("mv /data01/avamar/repo/packages/* /usr/local/avamar/src/oldAvps")
 			if len(os.listdir("/data01/avamar/repo/packages")) > 0:
 				printBoth("Can't copy avps currently preset in the avinstaller")
 				printBoth("Print please Consult with RPS SME to clear the Avinstaller Repo")
@@ -283,18 +287,19 @@ def clearRepo():
 	else: printBoth("Avinstaller Repo is already Clear"	)
 ################## End clearRepo() ####################
 		
-		
-############### Start aviUpgradeNeeded() ###############
+		############### Start aviUpgradeNeeded() ###############
 def aviUpgradeNeeded(currentFamily, currentVersion, targetFamily, targetVersion):
-	version = cmdOut("avinstaller.pl --version").split("_")[0].split("\t")[2].split("\n")[0]
-	if version == targetVersion:
+	version=cmdOut("avinstaller.pl --version").split("_")[0].split("\t")[2].split("\n")[0]
+	if version == targetVersion.replace("-","."):
 		return False
 	elif (currentFamily == "6.1" or currentFamily == "7.0" or currentVersion == "7.1.0-370") and (targetFamily == "7.1" or targetFamily == "7.2"):
 		return True
 	elif (currentFamily == "7.1") and (targetFamily == "7.3"):
 		return True
 	else: return False
+	
 ############### End aviUpgradeNeeded() ###############
+
 
 ############### Start stopBackupMaintSched() ###############
 
@@ -378,7 +383,15 @@ def extraSteps():
 	sender = output.split('\n')[1].split()[-2].split('=')[1].translate(None,'"')
 	
 	printBoth("SMTP host is " + smtp)
-	printBoth("email sender is" + sender)	
+	printBoth("email sender is" + sender)
+
+	if targetFamily == "7.4":
+		output = cmdOut("ls -lah /data01/avamar/var | grep Rollups_Survey_Save.tgz")
+		output = output.split("\n")
+		if len(output>1):
+			cmdOut("cd /data01/avamar/var")
+			cmdOut("tar czvf Rollups_Survey_Save.tgz package-survey*")
+			cmdOut("rm -f package-survey*") 	
 ############### End extraSteps() ###############
 
 ##################### START HELPERS #########################
@@ -491,9 +504,17 @@ def query_yes_no(question, default="yes"):
 			#sys.stdout.write("Please respond with 'yes' or 'no' "
                           #"(or 'y' or 'n').\n")
 ############### End query_yes_no() ###############
+
+############### Start getInput() ###############
+def getInput(question):
+
+	sys.stdout.write(question)
+	input = raw_input()
+	return input 
+    
+############### getInput() ###############
+
 ##################### END HELPERS #########################
-
-
 
 
 ########################## Start fileNames() #############################
@@ -1166,7 +1187,7 @@ def fileNames(targetVersion):
 ########Customer Handover mail starts at Rev5########				
 	elif targetVersion == "7.2.1-32":
 		avaimFULL = "avaim_FULL_7.2.1-32_1.tgz"
-		checksumFULL = "2946bdeb7c47582bb5860712aeec96d2"
+		checksumFULL = "eaf550f34e17c31e8e777042d1a79ae7"
 		avinstallerFile = "UpgradeAvinstaller-7.2.1-32.avp"
 		upgradeFile = "AvamarUpgrade-7.2.1-32.avp"
 		customerHandoverScript = "avaim_FULL_7.2.1-32_1/scripts/customer_handover_v5.2.sh"

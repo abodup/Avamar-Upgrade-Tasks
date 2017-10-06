@@ -1,34 +1,35 @@
 ############### Start extractCopyAvps() ###############
 def extractCopyAvps(currentFamily, currentVersion, targetFamily, targetVersion, avaimFULL, checksumFULL, avinstallerFile, upgradeFile, customerHandoverScript, UpgradeClientDownloads, avaimRCM, checksumRCM, callableFixesMandatory, callableFixesOptional, notCallableFixesMandatory):
-		
+	message ="""
+##################################################################
+#                      Start extractCopyAvps                     #
+##################################################################
+"""
+	printLog(message)
+	
 	clearRepo()
 	printBoth("Extracting " + avaimFULL)
 	cmd("tar xzvf /usr/local/avamar/src/%s -C /usr/local/avamar/src" %avaimFULL)	
 	printBoth("Extracting " + avaimRCM)
 	cmd("tar xzvf /usr/local/avamar/src/%s -C /usr/local/avamar/src" %avaimRCM)	
 	
-	
 	if aviUpgradeNeeded(currentFamily, currentVersion, targetFamily, targetVersion):
-		printBoth("Avinstaller upgrade is needed to " + targetVersion)
 		cmd("mv /usr/local/avamar/src/" + avinstallerFile + " /data01/avamar/repo/packages")
+	while aviUpgradeNeeded(currentFamily, currentVersion, targetFamily, targetVersion):
+		printBoth("Avinstaller upgrade is needed to " + targetVersion)
 		printBoth(avinstallerFile + " File copied to Avinstaller Repo and ready, please go to GUI")
 		question = "whenever Avinstaller upgrade done please press yes to continue"
-		cond = True
-		while cond:
-			if query_yes_no(question):
-				if cmd("avinstaller.pl --version") == targetVersion:
-					printBoth("Avinstaller version checked and you can go to Avamar server upgrade")
-					cond = False
-				else: printBoth("please check the Avinstaller upgrade again")
-			else: printBoth("please check the Avinstaller upgrade again")
-	else:
-		printBoth("You can go to Avamar server upgrade")
+		query_yes_no(question):
+			
+	printBoth("You can go to Avamar server upgrade")
 	
 	cmd("mv /usr/local/avamar/src/" + upgradeFile + " /data01/avamar/repo/packages")
 	printBoth(upgradeFile + " is being moved now to /data01/avamar/repo/packages")
 	
 	clientVer = cmdOut("ls /usr/local/avamar/var/avi/server_data/package_data/ | grep UpgradeClientDownloads-")
-	clientVer1 = clientVer.split("_")[0].split("-",1)[1][0:-4]
+	if clientVer: 
+		clientVer1 = clientVer.split("_")[0].split("-",1)[1][0:-4]
+	else: clientVer1 = clientVer
 	#UpgradeClientDownloads-7.2.1-32.avp_1496764981077 -> UpgradeClientDownloads-7.2.1-32.avp -> 7.2.1-32.avp -> 7.2.1-32
 	if clientVer1 != targetVersion:
 		question = "UpgradeClientDownloads pacakge needed, if you would like to add it now with server upgrade, please press yes."
@@ -52,4 +53,10 @@ def extractCopyAvps(currentFamily, currentVersion, targetFamily, targetVersion, 
 			printBoth(callableFixesOptional[length] + " is being moved now to /data01/avamar/repo/packages")
 			length += 1
 		else: length += 1
+	message ="""
+##################################################################
+#                      End extractCopyAvps                       #
+##################################################################
+"""
+	printLog(message)
 ############### End extractCopyAvps() ##########################################

@@ -10,7 +10,7 @@ def clearRepo():
 				printBoth("Print please Consult with RPS SME to clear the Avinstaller Repo")
 				sys.exit()
 	
-			os.system("mv /data01/avamar/repo/packages/* /usr/local/avamar/src/oldAvps")
+			cmd("mv /data01/avamar/repo/packages/* /usr/local/avamar/src/oldAvps")
 			if len(os.listdir("/data01/avamar/repo/packages")) > 0:
 				printBoth("Can't copy avps currently preset in the avinstaller")
 				printBoth("Print please Consult with RPS SME to clear the Avinstaller Repo")

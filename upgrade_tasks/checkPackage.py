@@ -1,5 +1,5 @@
 ############### Start checkPackage() ###############
-def checkPackages(package, packageChecksum):
+def checkPackages(targetFamily, package, packageChecksum):
 	cond = False
 	while not cond:
 		### Check Package Exists
@@ -10,7 +10,9 @@ def checkPackages(package, packageChecksum):
 		printBoth(package + " File Found")
 		##### Checksum of the file ####
 		printBoth("checking Checksum of " + package)
-		output = cmdOut("sha256sum /usr/local/avamar/src/" + package)
+		if targetFamily == '7.4' or targetFamily == '7.5':
+			output = cmdOut("sha256sum /usr/local/avamar/src/" + package)
+		else: output = cmdOut("md5sum /usr/local/avamar/src/" + package)
 		checksum = output.split()[0]
 		printBoth(checksum)
 		if checksum == packageChecksum:
