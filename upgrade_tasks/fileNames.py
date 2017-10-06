@@ -1,11 +1,23 @@
-########################## Start fileNames() #############################
-def fileNames(targetVersion):
-	message ="""
-##################################################################
-#                       Start fileNames                          #
-##################################################################
-"""
-	printLog(message)
+#!/usr/bin/python
+import os
+import sys
+
+
+def main():
+	print "Please enter target version"
+	targetVersion = raw_input()
+	(avaimFULL, checksumFULL, avinstallerFile, upgradeFile, customerHandoverScript, UpgradeClientDownloads,  avaimRCM, checksumRCM, callableFixesMandatory, callableFixesOptional, notCallableFixesMandatory) = packageFiles(targetVersion)
+	print avaimFULL + "\n" + checksumFULL + "\n" + avinstallerFile + "\n" + upgradeFile + "\n" + customerHandoverScript + "\n" + UpgradeClientDownloads + "\n" + avaimRCM + "\n" + checksumRCM + "\n"
+	print "Mandatory callable fixes = "
+	print callableFixesMandatory
+	print "\n"
+	print "Mandatory non callable fixes = "
+	print notCallableFixesMandatory
+	print "\n"
+	print "Optional callable fixes = "
+	print callableFixesOptional
+
+def packageFiles(targetVersion):
 	avaimFULL = ""
 	checksumFULL = ""
 	checksumFULL = ""
@@ -24,13 +36,13 @@ def fileNames(targetVersion):
 ########Customer Handover mail starts at Rev7########	
 	if targetVersion ==  "7.1.1-145":
 		avaimFULL = "avaim_FULL_7.1.1-145_1.tgz"
-		checksumFULL = "aed65c89fddf77af4c1e82bcbeff96fe21e2e2925969375cbef9629352e14f58"
+		checksumFULL = "a32a21dcb25158a7df761ac004cc4b1a"
 		avinstallerFile = "UpgradeAvinstaller-7.1.1-145.avp"
 		upgradeFile = "AvamarUpgrade-7.1.1-145.avp"
 		customerHandoverScript = "avaim_FULL_7.1.1-145_1/scripts/customer_handover_v5.0.sh"
 		UpgradeClientDownloads = "UpgradeClientDownloads-7.1.1-145.avp"
 		
-		output = cmdOut("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.1.1-145_Rev*tgz")
+		output = os.popen("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.1.1-145_Rev*").read()
 		output = output.split("\n")
 		x = 0
 		new = []
@@ -45,10 +57,10 @@ def fileNames(targetVersion):
 		
 		sorted(new, key=int, reverse=True)
 		if not new:
-			printBoth("No Revision found")
+			print "No Revision found"
 			sys.exit()			
 		revNo = str(new[0]) 
-		printBoth("Newest Revision found on this Avamar is:  " +  revNo)
+		print "Newest Revision found on this Avamar is:  " +  revNo
 		
 		if revNo == "1":
 			question = "Latest Revision is 16, are you sure you want to continue with this RCM Revision Package?"
@@ -59,7 +71,7 @@ def fileNames(targetVersion):
 				callableFixesOptional = ["AdsGen4sPowerSupplyRedundancy-HF199778.avp"]
 				notCallableFixesMandatory = [""]
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 				
 		elif revNo == "2":
@@ -71,7 +83,7 @@ def fileNames(targetVersion):
 				callableFixesOptional = ["AdsGen4sPowerSupplyRedundancy-HF199778.avp"]
 				notCallableFixesMandatory = ["v7_1_1_145_HF_229688.avp"]
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()				
 
 		elif revNo == "3":
@@ -83,7 +95,7 @@ def fileNames(targetVersion):
 				callableFixesOptional = ["AdsGen4sPowerSupplyRedundancy-HF199778.avp"]
 				notCallableFixesMandatory = ["v7_1_1_145_HF_231762.avp"]
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 
 		elif revNo == "4":
@@ -95,7 +107,7 @@ def fileNames(targetVersion):
 				callableFixesOptional = ["AdsGen4sPowerSupplyRedundancy-HF199778.avp"]
 				notCallableFixesMandatory = ["v7_1_1_145_HF_235000.avp", "Hotfix234581-7.1.1-145.avp"]
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 
 		elif revNo == "5":
@@ -107,7 +119,7 @@ def fileNames(targetVersion):
 				callableFixesOptional = ["AdsGen4sPowerSupplyRedundancy-HF199778.avp"]
 				notCallableFixesMandatory = ["v7_1_1_145_HF_235000.avp", "Hotfix234581-7.1.1-145.avp"]
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 
 		elif revNo == "6":
@@ -119,7 +131,7 @@ def fileNames(targetVersion):
 				callableFixesOptional = ["AdsGen4sPowerSupplyRedundancy-HF199778.avp"]
 				notCallableFixesMandatory = ["v7_1_1_145_HF_240802.avp", "v7_1_1_145_HF_235341.avp", "Hotfix234581-7.1.1-145.avp"]
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 			
 		elif revNo == "7":
@@ -132,7 +144,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_1_1_145_HF_241892.avp", "v7_1_1_145_HF_235341.avp", "Hotfix234581-7.1.1-145.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.2.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 
 		elif revNo == "8":
@@ -146,7 +158,7 @@ def fileNames(targetVersion):
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.2.sh"
 				
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 
 		elif revNo == "9":
@@ -159,7 +171,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_1_1_145_HF_241892.avp", "v7_1_1_145_HF_235341.avp", "Hotfix234581-7.1.1-145.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.2.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 				
 		elif revNo == "10":
@@ -172,7 +184,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_1_1_145_HF_241892.avp", "v7_1_1_145_HF_235341.avp", "Hotfix234581-7.1.1-145.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.3.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 
 		elif revNo == "11":
@@ -185,7 +197,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_1_1_145_HF_241892.avp", "v7_1_1_145_HF_235341.avp", "Hotfix234581-7.1.1-145.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()				
 				
 		elif revNo == "12":
@@ -198,7 +210,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_1_1_145_HF_258017.avp", "v7_1_1_145_HF_235341.avp", "Hotfix234581-7.1.1-145.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 
 		elif revNo == "13":
@@ -211,7 +223,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_1_1_145_HF_258017.avp", "v7_1_1_145_HF_235341.avp", "Hotfix234581-7.1.1-145.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 
 		elif revNo == "14":
@@ -224,7 +236,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_1_1_145_HF_258017.avp", "v7_1_1_145_HF_235341.avp", "Hotfix234581-7.1.1-145.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 
 		elif revNo == "16":
@@ -236,24 +248,24 @@ def fileNames(targetVersion):
 			customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 		
 		elif revNo == "15":
-			printBoth("This revision was recalled, please download the latest revision and try again")
+			print "This revision was recalled, please download the latest revision and try again"
 			sys.exit()
 		
 		else:
-			printBoth("Please download a valid Revision and try again.")
+			print "Please download a valid Revision and try again."
 			sys.exit()		
 			
 ########Version 7.1.2-21, onlyIfNeeded folder starts at Rev16########
 ########Customer Handover mail starts at Rev4########	
 	elif targetVersion == "7.1.2-21":
 		avaimFULL = "avaim_FULL_7.1.2-21_1.tgz"
-		checksumFULL = "1800590ea1b4eb02e3e27177b1819255"
+		checksumFULL = "14acc5da8aef98bee63aac72d9461dc7"
 		avinstallerFile = "UpgradeAvinstaller-7.1.2-21.avp"
 		upgradeFile = "AvamarUpgrade-7.1.2-21.avp"
 		customerHandoverScript = "customer_handover_v5.1.sh"
 		UpgradeClientDownloads = "avaim_FULL_7.1.2-21_1/scripts/UpgradeClientDownloads-7.1.2-21.avp"
 		
-		output = cmdOut("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.1.2-21_Rev*tgz")
+		output = os.popen("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.1.2-21_Rev*").read()
 		output = output.split("\n")
 		x = 0
 		new = []
@@ -268,10 +280,10 @@ def fileNames(targetVersion):
 		
 		sorted(new, key=int, reverse=True)
 		if not new:
-			printBoth("No Revision found")
+			print "No Revision found"
 			sys.exit()			
 		revNo = str(new[0]) 
-		printBoth("Newest Revision found on this Avamar is:  " +  revNo)
+		print "Newest Revision found on this Avamar is:  " +  revNo
 		
 		if revNo == "1":
 			question = "Latest Revision is 16, are you sure you want to continue with this RCM Revision Package?"
@@ -281,7 +293,7 @@ def fileNames(targetVersion):
 				callableFixesMandatory = ["AvPlatformOsRollup_2015-Q1-v9.avp"]
 				callableFixesOptional = ["AdsGen4sPowerSupplyRedundancy-HF199778.avp"]
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 		
 		elif revNo == "2":
@@ -292,7 +304,7 @@ def fileNames(targetVersion):
 				callableFixesMandatory = ["AvPlatformOsRollup_2015-Q2-v8.avp"]
 				callableFixesOptional = ["AdsGen4sPowerSupplyRedundancy-HF199778.avp"]
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 		
 		elif revNo == "3":
@@ -304,7 +316,7 @@ def fileNames(targetVersion):
 				callableFixesOptional = ["AdsGen4sPowerSupplyRedundancy-HF199778.avp"]
 				notCallableFixesMandatory = ["v7_1_2_21_HF_241549.avp"]
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 						
 		elif revNo == "4":
@@ -317,7 +329,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_1_2_21_HF_244284.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.2.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 										
 		elif revNo == "5":
@@ -330,7 +342,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_1_2_21_HF_244284.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.2.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 										
 		elif revNo == "6":
@@ -343,7 +355,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_1_2_21_HF_247657.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.2.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 														
 		elif revNo == "7":
@@ -356,7 +368,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_1_2_21_HF_247657.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.2.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 																		
 		elif revNo == "8":
@@ -369,7 +381,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_1_2_21_HF_247565.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.2.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 																						
 		elif revNo == "9":
@@ -382,7 +394,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_1_2_21_HF_247565.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.3.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 																										
 		elif revNo == "10":
@@ -395,7 +407,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_1_2_21_HF_250666.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 																														
 		elif revNo == "11":
@@ -408,7 +420,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_1_2_21_HF_250666.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 																																		
 		elif revNo == "12":
@@ -421,7 +433,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_1_2_21_HF_255459.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 																																						
 		elif revNo == "13":
@@ -434,7 +446,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_1_2_21_HF_255459.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 																																										
 		elif revNo == "14":
@@ -447,7 +459,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_1_2_21_HF_255459.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 																																														
 		elif revNo == "16":
@@ -459,24 +471,24 @@ def fileNames(targetVersion):
 			customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 		
 		elif revNo == "15":
-			printBoth("This revision was recalled, please download the latest revision and try again")
+			print "This revision was recalled, please download the latest revision and try again"
 			sys.exit()
 		
 		else:
-			printBoth("Please download a valid Revision and try again.")
+			print "Please download a valid Revision and try again."
 			sys.exit()
 		
 ########Version 7.2.0-401, onlyIfNeeded folder starts at Rev14########
 ########Customer Handover mail starts at Rev2########		
 	elif targetVersion == "7.2.0-401":	
 		avaimFULL = "avaim_FULL_7.2.0-401_1.tgz"
-		checksumFULL = "4157a8149defc2b994eaa1d190f17c5e"
+		checksumFULL = "bb3d10c84fcb344b49bdc0341199a683"
 		avinstallerFile = "UpgradeAvinstaller-7.2.0-401.avp"
 		upgradeFile = "AvamarUpgrade-7.2.0-401.avp"
 		customerHandoverScript = "avaim_FULL_7.2.0-401_1/scripts/customer_handover_v5.1.sh"
 		UpgradeClientDownloads = "UpgradeClientDownloads-7.2.0-401.avp"
 		
-		output = cmdOut("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.2.0-401_Rev*tgz")
+		output = os.popen("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.2.0-401_Rev*").read()
 		output = output.split("\n")
 		x = 0
 		new = []
@@ -491,10 +503,10 @@ def fileNames(targetVersion):
 		
 		sorted(new, key=int, reverse=True)
 		if not new:
-			printBoth("No Revision found")
+			print "No Revision found"
 			sys.exit()			
 		revNo = str(new[0]) 
-		printBoth("Newest Revision found on this Avamar is:  " +  revNo)
+		print "Newest Revision found on this Avamar is:  " +  revNo		
 		
 		if revNo == "1":
 			question = "Latest Revision is 14, are you sure you want to continue with this RCM Revision Package?"
@@ -504,7 +516,7 @@ def fileNames(targetVersion):
 				callableFixesMandatory = ["AvPlatformOsRollup_2015-Q2-v8.avp"]
 				callableFixesOptional = ["AdsGen4sPowerSupplyRedundancy-HF199778.avp"]
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 				
 		elif revNo == "2":
@@ -516,7 +528,7 @@ def fileNames(targetVersion):
 				callableFixesOptional = ["AdsGen4sPowerSupplyRedundancy-HF199778.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.2.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 				
 		elif revNo == "3":
@@ -529,7 +541,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_2_0_401_HF_245396.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.2.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 				
 		elif revNo == "4":
@@ -542,7 +554,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_2_0_401_HF_247126.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.2.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 				
 		elif revNo == "5":
@@ -555,7 +567,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_2_0_401_HF_247126.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.2.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 				
 		elif revNo == "6":
@@ -568,7 +580,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_2_0_401_HF_250387.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.2.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 				
 		elif revNo == "7":
@@ -581,7 +593,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_2_0_401_HF_250387.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.3.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 				
 		elif revNo == "8":
@@ -594,7 +606,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_2_0_401_HF_250387.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 				
 		elif revNo == "9":
@@ -607,7 +619,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_2_0_401_HF_250725.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 				
 		elif revNo == "10":
@@ -620,7 +632,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_2_0_401_HF_250725.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 				
 		elif revNo == "11":
@@ -633,7 +645,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_2_0_401_HF_250725.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"		
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 				
 		elif revNo == "12":
@@ -646,7 +658,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_2_0_401_HF_250725.avp", "v7_2_0_401_HF_278332.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 				
 		elif revNo == "14":
@@ -658,23 +670,23 @@ def fileNames(targetVersion):
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 
 		elif revNo == "13":
-			printBoth("This revision was recalled, please download the latest revision and try again")
+			print "This revision was recalled, please download the latest revision and try again"
 			sys.exit()		
 		
 		else:
-			printBoth("Please download a valid Revision and try again.")
+			print "Please download a valid Revision and try again."
 
 ########Version 7.2.1-32, onlyIfNeeded folder starts at Rev14########
 ########Customer Handover mail starts at Rev5########				
 	elif targetVersion == "7.2.1-32":
 		avaimFULL = "avaim_FULL_7.2.1-32_1.tgz"
-		checksumFULL = "2946bdeb7c47582bb5860712aeec96d2"
+		checksumFULL = "eaf550f34e17c31e8e777042d1a79ae7"
 		avinstallerFile = "UpgradeAvinstaller-7.2.1-32.avp"
 		upgradeFile = "AvamarUpgrade-7.2.1-32.avp"
 		customerHandoverScript = "avaim_FULL_7.2.1-32_1/scripts/customer_handover_v5.2.sh"
 		UpgradeClientDownloads = "UpgradeClientDownloads-7.2.1-32.avp"
 		
-		output = cmdOut("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.2.1-32_Rev*tgz")
+		output = os.popen("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.2.1-32_Rev*").read()
 		output = output.split("\n")
 		x = 0
 		new = []
@@ -689,10 +701,10 @@ def fileNames(targetVersion):
 		
 		sorted(new, key=int, reverse=True)
 		if not new:
-			printBoth("No Revision found")
+			print "No Revision found"
 			sys.exit()			
 		revNo = str(new[0]) 
-		printBoth("Newest Revision found on this Avamar is:  " +  revNo)
+		print "Newest Revision found on this Avamar is:  " +  revNo
 		
 		if revNo == "1":
 			question = "Latest Revision is 15, are you sure you want to continue with this RCM Revision Package?"
@@ -702,7 +714,7 @@ def fileNames(targetVersion):
 				callableFixesMandatory = ["AvPlatformOsRollup_2015-Q3-v4.avp"]
 				callableFixesOptional = ["AdsGen4sPowerSupplyRedundancy-HF199778.avp"]
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 
 		elif revNo == "2":
@@ -713,7 +725,7 @@ def fileNames(targetVersion):
 				callableFixesMandatory = ["AvPlatformOsRollup_2015-Q3-v4.avp"]
 				callableFixesOptional = ["AdsGen4sPowerSupplyRedundancy-HF249880.avp"]
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()			
 		
 		elif revNo == "3":
@@ -724,7 +736,7 @@ def fileNames(targetVersion):
 				callableFixesMandatory = ["AvPlatformOsRollup_2015-Q4-v7.avp"]
 				callableFixesOptional = ["AdsGen4sPowerSupplyRedundancy-HF249880.avp"]
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()	
 				
 		elif revNo == "4":
@@ -736,7 +748,7 @@ def fileNames(targetVersion):
 				callableFixesOptional = ["AdsGen4sPowerSupplyRedundancy-HF249880.avp"]
 				notCallableFixesMandatory = ["v7_2_1_32_HF_248125.avp"]
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 		
 		elif revNo == "5":
@@ -749,7 +761,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_2_1_32_HF_248125.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.3.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 		
 		elif revNo == "6":
@@ -762,7 +774,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_2_1_32_HF_250967.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 
 		elif revNo == "7":
@@ -775,7 +787,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_2_1_32_HF_250967.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()			
 		
 		elif revNo == "9":
@@ -788,7 +800,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_2_1_32_HF_250967.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 		
 		elif revNo == "10":
@@ -801,7 +813,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_2_1_32_HF_250967.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 
 		elif revNo == "11":
@@ -814,7 +826,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_2_1_32_HF_250967.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 					
 		elif revNo == "12":
@@ -827,7 +839,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_2_1_32_HF_277897.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 
 		elif revNo == "14":
@@ -840,7 +852,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_2_1_32_HF_282216.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 
 		elif revNo == "15":
@@ -852,27 +864,27 @@ def fileNames(targetVersion):
 			customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 		
 		elif revNo == "8":
-			printBoth("This revision was recalled, please download the latest revision and try again")
+			print "This revision was recalled, please download the latest revision and try again"
 			sys.exit()
 		
 		elif revNo == "13":
-			printBoth("This revision was recalled, please download the latest revision and try again")
+			print "This revision was recalled, please download the latest revision and try again"
 			sys.exit()	
 		
 		else:
-			printBoth("Please download a valid Revision and try again.")			
+			print "Please download a valid Revision and try again."			
 			sys.exit()
 	
 ########Version 7.3.0-233, onlyIfNeeded folder starts at Rev10########
 ########Customer Handover mail starts at Rev1 in scripts########
 	elif targetVersion == "7.3.0-233":
 		avaimFULL = "avaim_FULL_7.3.0-233_1.tgz"
-		checksumFULL = "162f5ba81993056226cfc690eb312c0a"
+		checksumFULL = "9ee166a2d28921a8ce1901f4d36dbd50"
 		avinstallerFile = "UpgradeAvinstaller-7.3.0-233.avp"
 		upgradeFile = "AvamarUpgrade-7.3.0-233.avp"
 		UpgradeClientDownloads = "UpgradeClientDownloads-7.3.0-233.avp"
 			
-		output = cmdOut("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.3.0-233_Rev*tgz")
+		output = os.popen("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.3.0-233_Rev*").read()
 		output = output.split("\n")
 		x = 0
 		new = []
@@ -887,10 +899,10 @@ def fileNames(targetVersion):
 		
 		sorted(new, key=int, reverse=True)
 		if not new:
-			printBoth("No Revision found")
+			print "No Revision found"
 			sys.exit()			
 		revNo = str(new[0]) 
-		printBoth("Newest Revision found on this Avamar is:  " +  revNo)
+		print "Newest Revision found on this Avamar is:  " +  revNo
 			
 		if revNo == "1":
 			question = "Latest Revision is 10, are you sure you want to continue with this RCM Revision Package?"
@@ -902,7 +914,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = [""]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"		
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 					
 		elif revNo == "2":
@@ -916,7 +928,7 @@ def fileNames(targetVersion):
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"	
 			
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 					
 		elif revNo == "3":
@@ -929,7 +941,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = [""]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"	
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 
 		elif revNo == "4":
@@ -942,7 +954,7 @@ def fileNames(targetVersion):
 					notCallableFixesMandatory = [""]
 					customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"	
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 
 		elif revNo == "5":
@@ -955,7 +967,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = [""]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"	
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 
 		elif revNo == "6":
@@ -968,7 +980,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = [""]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"	
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 
 		elif revNo == "7":
@@ -981,7 +993,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = [""]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"	
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 
 		elif revNo == "8":
@@ -994,7 +1006,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = [""]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"	
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 
 		elif revNo == "10":
@@ -1006,23 +1018,23 @@ def fileNames(targetVersion):
 			customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"	
 			
 		elif revNo == "9":
-			printBoth("This revision was recalled, please download the latest revision and try again")
+			print "This revision was recalled, please download the latest revision and try again"
 			sys.exit()	
 		
 		else:
-			printBoth("Please download a valid Revision and try again.")			
+			print "Please download a valid Revision and try again."			
 			sys.exit()
 	
 	########Version 7.3.1-125, onlyIfNeeded folder starts at Rev6########
 	########Customer Handover mail starts at Rev1########
 	elif targetVersion == "7.3.1-125":
 		avaimFULL = "avaim_FULL_7.3.1-125_1.tgz"
-		checksumFULL = "457440734e86e3dc5c7b9baa49911712"
+		checksumFULL = "8695f136d7eecdf1a98032a50fd7a6e9"
 		avinstallerFile = "UpgradeAvinstaller-7.3.1-125.avp"
 		upgradeFile = "AvamarUpgrade-7.3.1-125.avp"
 		UpgradeClientDownloads = "UpgradeClientDownloads-7.3.1-125.avp" 
 			
-		output = cmdOut("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.3.1-125_Rev*tgz")
+		output = os.popen("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.3.1-125_Rev*").read()
 		output = output.split("\n")
 		x = 0
 		new = []
@@ -1037,10 +1049,10 @@ def fileNames(targetVersion):
 		
 		sorted(new, key=int, reverse=True)
 		if not new:
-			printBoth("No Revision found")
+			print "No Revision found"
 			sys.exit()			
 		revNo = str(new[0]) 
-		printBoth("Newest Revision found on this Avamar is:  " + revNo)
+		print "Newest Revision found on this Avamar is:  " + revNo
 			
 		if revNo == "1":
 			question = "Latest Revision is 8, are you sure you want to continue with this RCM Revision Package?"
@@ -1052,7 +1064,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = [""]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 
 		elif revNo == "2":
@@ -1065,7 +1077,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = [""]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 
 		elif revNo == "3":
@@ -1078,7 +1090,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_3_1_125_HF_274527.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 
 		elif revNo == "4":
@@ -1091,7 +1103,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_3_1_125_HF_274527.avp", "v7_3_1_125_HF_278484.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 
 		elif revNo == "6":
@@ -1104,7 +1116,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_3_1_125_HF_275129.avp", "v7_3_1_125_HF_278484.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 
 		elif revNo == "7":
@@ -1117,7 +1129,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = ["v7_3_1_125_HF_275129.avp", "v7_3_1_125_HF_278484.avp", "v7_3_1_125_mc_cumulative_201706.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()	
 
 		elif revNo == "8":
@@ -1129,23 +1141,23 @@ def fileNames(targetVersion):
 			customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 
 		elif revNo == "5":
-			printBoth("This revision was recalled, please download the latest revision and try again")
+			print "This revision was recalled, please download the latest revision and try again"
 			sys.exit()	
 		
 		else:
-			printBoth("Please download a valid Revision and try again.")		
+			print "Please download a valid Revision and try again."			
 			sys.exit()
 						
 	########Version 7.4.0-242########
 	########Customer Handover mail starts at Rev1########
 	elif targetVersion == "7.4.0-242":
 		avaimFULL = "avaim_FULL_7.4.0-242_1.tgz"
-		checksumFULL = "8ece38bc6853e7ee1ba83418acc78d966865d0a1add57107755a31d1547c24b2"
+		checksumFULL = "5232fd35e9f495e7040bbb363293a287ba7531e6deb3db518d45905ca9d81bea"
 		avinstallerFile = "UpgradeAvinstaller-7.4.0-242.avp"
 		upgradeFile = "AvamarUpgrade-7.4.0-242.avp"
 		UpgradeClientDownloads = "UpgradeClientDownloads-7.4.0-242.avp"
 			
-		output = cmdOut("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.4.0-242_Rev*tgz")
+		output = os.popen("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.4.0-242_Rev*").read()
 		output = output.split("\n")
 		x = len(output)-2
 		new = []
@@ -1156,7 +1168,7 @@ def fileNames(targetVersion):
 		
 		sorted(new, key=int, reverse=True)
 		revNo = str(new[0]) 
-		printBoth("Newest Revision found on this Avamar is:  " +  revNo)			
+		print "Newest Revision found on this Avamar is:  " +  revNo			
 		
 		if revNo == "1":
 			avaimRCM = "avaim_RCM_Updates_7.4.0-242_Rev1.tgz"
@@ -1167,7 +1179,7 @@ def fileNames(targetVersion):
 			customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 		
 		else:
-			printBoth("Please download a valid Revision and try again.")			
+			print "Please download a valid Revision and try again."			
 			sys.exit()		
 		
 	########Version 7.4.1-58, onlyIfNeeded folder starts at Rev3########
@@ -1179,7 +1191,7 @@ def fileNames(targetVersion):
 		upgradeFile = "AvamarUpgrade-7.4.1-58.avp"
 		UpgradeClientDownloads = "UpgradeClientDownloads-7.4.1-58.avp"
 
-		output = cmdOut("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.4.1-58_Rev*tgz")
+		output = os.popen("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.4.1-58_Rev*").read()
 		output = output.split("\n")
 		x = 0
 		new = []
@@ -1194,10 +1206,10 @@ def fileNames(targetVersion):
 		
 		sorted(new, key=int, reverse=True)
 		if not new:
-			printBoth("No Revision found")
+			print "No Revision found"
 			sys.exit()			
 		revNo = str(new[0]) 
-		printBoth("Newest Revision found on this Avamar is:  " +  revNo)
+		print "Newest Revision found on this Avamar is:  " +  revNo
 		
 		if revNo == "1":
 			question = "Latest Revision is 5, are you sure you want to continue with this RCM Revision Package?"
@@ -1208,11 +1220,11 @@ def fileNames(targetVersion):
 				callableFixesOptional = ["AdsGen4sPowerSupplyRedundancy-HF249880.avp"]
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 		
 		elif revNo == "2":
-			printBoth("This is a recalled revision that can not be used, please download the latest Revision and try again")
+			print "This is a recalled revision that can not be used, please download the latest Revision and try again"
 			sys.exit()
 		
 		elif revNo == "3":
@@ -1226,7 +1238,7 @@ def fileNames(targetVersion):
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 				
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 		elif revNo == "4":
 			question = "Latest Revision is 5, are you sure you want to continue with this RCM Revision Package?"
@@ -1239,7 +1251,7 @@ def fileNames(targetVersion):
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 			
 			else:
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 				
 		elif revNo == "5":
@@ -1251,19 +1263,19 @@ def fileNames(targetVersion):
 			customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 		
 		else:
-			printBoth("Please download a valid Revision number")
+			print "Please download a valid Revision number"
 			sys.exit()
 		
 	########Version 7.5.0-183, onlyIfNeeded folder starts at Rev1########
 	########Customer Handover mail starts at Rev1########
 	elif targetVersion == "7.5.0-183":
 		avaimFULL = "avaim_FULL_7.5.0-183.tgz"
-		checksumFULL = "896050a0b296fa9c5f78036e1a1b6238a464fd4ce8d49c6884aa998ae04e2b94"
+		checksumFULL = "481f0f39c37ac1ffbc3b1e862ec3337317dcd825d49ee079a67b4a23fdc7483e"
 		avinstallerFile = "UpgradeAvinstaller-7.5.0-183.avp"
 		upgradeFile = "AvamarUpgrade-7.5.0-183.avp"
 		UpgradeClientDownloads = "UpgradeClientDownloads-7.5.0-183.avp"
 		
-		output = cmdOut("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.5.0-183_Rev*tgz")
+		output = os.popen("ls -lah /usr/local/avamar/src/avaim_RCM_Updates_7.5.0-183_Rev*").read()
 		output = output.split("\n")
 		x = 0
 		new = []
@@ -1278,10 +1290,10 @@ def fileNames(targetVersion):
 		
 		sorted(new, key=int, reverse=True)
 		if not new:
-			printBoth("No Revision found")
+			print "No Revision found"
 			sys.exit()			
 		revNo = str(new[0]) 
-		printBoth("Newest Revision found on this Avamar is:  " +  revNo)		
+		print "Newest Revision found on this Avamar is:  " +  revNo		
 		
 		if revNo == "1":
 			question = "Latest Revision is 3, are you sure you want to continue with this RCM Revision Package?"
@@ -1293,7 +1305,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = []
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 			else: 
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 			
 		elif revNo == "2":
@@ -1306,7 +1318,7 @@ def fileNames(targetVersion):
 				notCallableFixesMandatory = []
 				customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 			else: 
-				printBoth("Please download the latest Revision and try again.")
+				print "Please download the latest Revision and try again."
 				sys.exit()
 				
 		elif revNo == "3":
@@ -1318,11 +1330,11 @@ def fileNames(targetVersion):
 			customerHandoverScript = avaimRCM.split(".tgz")[0] + "/" + "customer_handover_v5.4.sh"
 			
 		else:	
-			printBoth("Please download a valid Revision number")
+			print "Please download a valid Revision number"
 			sys.exit()
 			
 	else:
-		printBoth("Please download a valid Version number")
+		print "Please download a valid Version number"
 		sys.exit()
 	
 	
@@ -1336,11 +1348,43 @@ def fileNames(targetVersion):
 	
 	
 	########Return Paths for required packages########
-	message ="""
-##################################################################
-#                       End fileNames                            #
-##################################################################
-"""
-	printLog(message)
+	
 	return(avaimFULL, checksumFULL, avinstallerFile, upgradeFile, customerHandoverScript, UpgradeClientDownloads,  avaimRCM, checksumRCM, callableFixesMandatory, callableFixesOptional, notCallableFixesMandatory) 
-###################### End fileNames() #######################################
+	
+	############### Start query_yes_no() ###############
+def query_yes_no(question, default="yes"):
+    """Ask a yes/no question via raw_input() and return their answer.
+
+    "question" is a string that is presented to the user.
+    "default" is the presumed answer if the user just hits <Enter>.
+        It must be "yes" (the default), "no" or None (meaning
+        an answer is required of the user).
+
+    The "answer" return value is True for "yes" or False for "no".
+    """
+    valid = {"yes": True, "y": True, "ye": True,
+             "no": False, "n": False}
+    if default is None:
+        prompt = " [y/n] "
+    elif default == "yes":
+        prompt = " [Y/n] "
+    elif default == "no":
+        prompt = " [y/N] "
+    else:
+        raise ValueError("invalid default answer: '%s'" % default)
+
+    while True:
+        sys.stdout.write(question + prompt)
+        choice = raw_input().lower()
+        if default is not None and choice == '':
+            return valid[default]
+        elif choice in valid:
+            return valid[choice]
+        else:
+            sys.stdout.write("Please respond with 'yes' or 'no' "
+                             "(or 'y' or 'n').\n")
+
+############### End query_yes_no() ###############
+	
+	
+main()
