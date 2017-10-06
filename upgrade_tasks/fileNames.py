@@ -1,23 +1,13 @@
-#!/usr/bin/python
-import os
-import sys
+########################## Start fileNames() #############################
 
 
-def main():
-	print "Please enter target version"
-	targetVersion = raw_input()
-	(avaimFULL, checksumFULL, avinstallerFile, upgradeFile, customerHandoverScript, UpgradeClientDownloads,  avaimRCM, checksumRCM, callableFixesMandatory, callableFixesOptional, notCallableFixesMandatory) = packageFiles(targetVersion)
-	print avaimFULL + "\n" + checksumFULL + "\n" + avinstallerFile + "\n" + upgradeFile + "\n" + customerHandoverScript + "\n" + UpgradeClientDownloads + "\n" + avaimRCM + "\n" + checksumRCM + "\n"
-	print "Mandatory callable fixes = "
-	print callableFixesMandatory
-	print "\n"
-	print "Mandatory non callable fixes = "
-	print notCallableFixesMandatory
-	print "\n"
-	print "Optional callable fixes = "
-	print callableFixesOptional
-
-def packageFiles(targetVersion):
+def fileNames(targetVersion):
+	message ="""
+##################################################################
+#                      Start fileNames                           #
+##################################################################
+"""
+	printLog(message)
 	avaimFULL = ""
 	checksumFULL = ""
 	checksumFULL = ""
@@ -1344,47 +1334,14 @@ def packageFiles(targetVersion):
 	callableFixesMandatory = [avaimRCM.split(".tgz")[0] + "/" + callableFixesMandatory for callableFixesMandatory in callableFixesMandatory]
 	callableFixesOptional = [avaimRCM.split(".tgz")[0] + "/" + callableFixesOptional for callableFixesOptional in callableFixesOptional]
 	notCallableFixesMandatory = [avaimRCM.split(".tgz")[0] + "/" + notCallableFixesMandatory for notCallableFixesMandatory in notCallableFixesMandatory]
-	
-	
-	
+	message ="""
+##################################################################
+#                      End fileNames                             #
+##################################################################
+"""
+	printLog(message)	
 	########Return Paths for required packages########
 	
 	return(avaimFULL, checksumFULL, avinstallerFile, upgradeFile, customerHandoverScript, UpgradeClientDownloads,  avaimRCM, checksumRCM, callableFixesMandatory, callableFixesOptional, notCallableFixesMandatory) 
+########################## End fileNames() #############################
 	
-	############### Start query_yes_no() ###############
-def query_yes_no(question, default="yes"):
-    """Ask a yes/no question via raw_input() and return their answer.
-
-    "question" is a string that is presented to the user.
-    "default" is the presumed answer if the user just hits <Enter>.
-        It must be "yes" (the default), "no" or None (meaning
-        an answer is required of the user).
-
-    The "answer" return value is True for "yes" or False for "no".
-    """
-    valid = {"yes": True, "y": True, "ye": True,
-             "no": False, "n": False}
-    if default is None:
-        prompt = " [y/n] "
-    elif default == "yes":
-        prompt = " [Y/n] "
-    elif default == "no":
-        prompt = " [y/N] "
-    else:
-        raise ValueError("invalid default answer: '%s'" % default)
-
-    while True:
-        sys.stdout.write(question + prompt)
-        choice = raw_input().lower()
-        if default is not None and choice == '':
-            return valid[default]
-        elif choice in valid:
-            return valid[choice]
-        else:
-            sys.stdout.write("Please respond with 'yes' or 'no' "
-                             "(or 'y' or 'n').\n")
-
-############### End query_yes_no() ###############
-	
-	
-main()
