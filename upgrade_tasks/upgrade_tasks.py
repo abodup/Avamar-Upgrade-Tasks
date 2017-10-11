@@ -22,8 +22,8 @@ def main():
 	if prePostTech == "preUpgrade":
 		printBoth("Executing PreUpgrade Tasks")
 		avaimFULL, checksumFULL, avinstallerFile, upgradeFile, customerHandoverScript, UpgradeClientDownloads,  avaimRCM, checksumRCM, callableFixesMandatory, callableFixesOptional, notCallableFixesMandatory  = fileNames(targetVersion)
-		#checkPackages(targetFamily, False, avaimFULL, checksumFULL)
-		#checkPackages(targetFamily, True, avaimRCM, checksumRCM)		
+		checkPackages(targetFamily, False, avaimFULL, checksumFULL)
+		checkPackages(targetFamily, True, avaimRCM, checksumRCM)		
 		latestProactiveCheck()
 		cmd("chmod 777 /home/admin/upgrade_tasks/")
 		cmd("touch /home/admin/upgrade_tasks/hc_proactive_check.log")
@@ -217,18 +217,20 @@ def extractCopyAvps(currentFamily, currentVersion, targetFamily, targetVersion, 
 	
 	if aviUpgradeNeeded(currentFamily, currentVersion, targetFamily, targetVersion):
 		cmd("mv /usr/local/avamar/src/" + avinstallerFile + " /data01/avamar/repo/packages")
-		
-	while aviUpgradeNeeded(currentFamily, currentVersion, targetFamily, targetVersion):
 		printBoth("Avinstaller upgrade is needed to " + targetVersion)
 		printBoth(avinstallerFile + " File copied to Avinstaller Repo and ready, please go to GUI")
 		question = "whenever Avinstaller upgrade done please press yes to continue"
 		query_yes_no(question)
-			
+		
+		while aviUpgradeNeeded(currentFamily, currentVersion, targetFamily, targetVersion):
+			printBoth("Avinstaller is still reporting an old version and still needs to be upgraded")
+			question = "whenever Avinstaller upgrade done please press yes to continue"
+			query_yes_no(question)
+	else: printBoth("Avinstaller upgrade is not needed")		
 	printBoth("You can go to Avamar server upgrade")
-	
 	cmd("mv /usr/local/avamar/src/" + upgradeFile + " /data01/avamar/repo/packages")
 	printBoth(upgradeFile + " is being moved now to /data01/avamar/repo/packages")
-	
+	#Not a very good command, use /usr/local/avamra/src/downloads westandaflna file
 	clientVer = cmdOut("ls /usr/local/avamar/var/avi/server_data/package_data/ | grep UpgradeClientDownloads-")
 	if clientVer: 
 		clientVer1 = clientVer.split("_")[0].split("-",1)[1][0:-4]
@@ -241,13 +243,14 @@ def extractCopyAvps(currentFamily, currentVersion, targetFamily, targetVersion, 
 			printBoth(UpgradeClientDownloads + " is being moved now to /data01/avamar/repo/packages")
 		else: printBoth("please don't forget to move the package after upgrade.")
 	else: printBoth(UpgradeClientDownloads + " already installed before, you don't need to include.")
-		
+	
+	#For Loops	
 	length=0
 	while (length < len(callableFixesMandatory)):
 		cmd("mv /usr/local/avamar/src/" + callableFixesMandatory[length] + " /data01/avamar/repo/packages")
 		printBoth(callableFixesMandatory[length] + " is being moved now to /data01/avamar/repo/packages")
 		length += 1
-
+	
 	length=0
 	while (length < len(callableFixesOptional)):
 		question = "would you like to add " + callableFixesOptional[length] + " with the server upgrade as a callable package?"
@@ -287,7 +290,7 @@ def clearRepo():
 	else: printBoth("Avinstaller Repo is already Clear"	)
 ################## End clearRepo() ####################
 		
-		############### Start aviUpgradeNeeded() ###############
+############### Start aviUpgradeNeeded() ###############
 def aviUpgradeNeeded(currentFamily, currentVersion, targetFamily, targetVersion):
 	version=cmdOut("avinstaller.pl --version").split("_")[0].split("\t")[2].split("\n")[0]
 	if version == targetVersion.replace("-","."):
@@ -386,12 +389,15 @@ def extraSteps():
 	printBoth("email sender is" + sender)
 
 	if targetFamily == "7.4":
+		printBoth("Archiving and deleting old package-survey* ")
 		output = cmdOut("ls -lah /data01/avamar/var | grep Rollups_Survey_Save.tgz")
 		output = output.split("\n")
 		if len(output>1):
+			# Don't use cd and use tar and rm with absolute path options 
 			cmdOut("cd /data01/avamar/var")
 			cmdOut("tar czvf Rollups_Survey_Save.tgz package-survey*")
-			cmdOut("rm -f package-survey*") 	
+			cmdOut("rm -f package-survey*")
+			cmd("cd -")	
 ############### End extraSteps() ###############
 
 ##################### START HELPERS #########################
@@ -543,7 +549,7 @@ def fileNames(targetVersion):
 ########Customer Handover mail starts at Rev7########	
 	if targetVersion ==  "7.1.1-145":
 		avaimFULL = "avaim_FULL_7.1.1-145_1.tgz"
-		checksumFULL = "aed65c89fddf77af4c1e82bcbeff96fe21e2e2925969375cbef9629352e14f58"
+		checksumFULL = "a32a21dcb25158a7df761ac004cc4b1a"
 		avinstallerFile = "UpgradeAvinstaller-7.1.1-145.avp"
 		upgradeFile = "AvamarUpgrade-7.1.1-145.avp"
 		customerHandoverScript = "avaim_FULL_7.1.1-145_1/scripts/customer_handover_v5.0.sh"
@@ -766,7 +772,7 @@ def fileNames(targetVersion):
 ########Customer Handover mail starts at Rev4########	
 	elif targetVersion == "7.1.2-21":
 		avaimFULL = "avaim_FULL_7.1.2-21_1.tgz"
-		checksumFULL = "1800590ea1b4eb02e3e27177b1819255"
+		checksumFULL = "14acc5da8aef98bee63aac72d9461dc7"
 		avinstallerFile = "UpgradeAvinstaller-7.1.2-21.avp"
 		upgradeFile = "AvamarUpgrade-7.1.2-21.avp"
 		customerHandoverScript = "customer_handover_v5.1.sh"
@@ -989,7 +995,7 @@ def fileNames(targetVersion):
 ########Customer Handover mail starts at Rev2########		
 	elif targetVersion == "7.2.0-401":	
 		avaimFULL = "avaim_FULL_7.2.0-401_1.tgz"
-		checksumFULL = "4157a8149defc2b994eaa1d190f17c5e"
+		checksumFULL = "bb3d10c84fcb344b49bdc0341199a683"
 		avinstallerFile = "UpgradeAvinstaller-7.2.0-401.avp"
 		upgradeFile = "AvamarUpgrade-7.2.0-401.avp"
 		customerHandoverScript = "avaim_FULL_7.2.0-401_1/scripts/customer_handover_v5.1.sh"
@@ -1386,7 +1392,7 @@ def fileNames(targetVersion):
 ########Customer Handover mail starts at Rev1 in scripts########
 	elif targetVersion == "7.3.0-233":
 		avaimFULL = "avaim_FULL_7.3.0-233_1.tgz"
-		checksumFULL = "162f5ba81993056226cfc690eb312c0a"
+		checksumFULL = "9ee166a2d28921a8ce1901f4d36dbd50"
 		avinstallerFile = "UpgradeAvinstaller-7.3.0-233.avp"
 		upgradeFile = "AvamarUpgrade-7.3.0-233.avp"
 		UpgradeClientDownloads = "UpgradeClientDownloads-7.3.0-233.avp"
@@ -1536,7 +1542,7 @@ def fileNames(targetVersion):
 	########Customer Handover mail starts at Rev1########
 	elif targetVersion == "7.3.1-125":
 		avaimFULL = "avaim_FULL_7.3.1-125_1.tgz"
-		checksumFULL = "457440734e86e3dc5c7b9baa49911712"
+		checksumFULL = "8695f136d7eecdf1a98032a50fd7a6e9"
 		avinstallerFile = "UpgradeAvinstaller-7.3.1-125.avp"
 		upgradeFile = "AvamarUpgrade-7.3.1-125.avp"
 		UpgradeClientDownloads = "UpgradeClientDownloads-7.3.1-125.avp" 
@@ -1659,7 +1665,7 @@ def fileNames(targetVersion):
 	########Customer Handover mail starts at Rev1########
 	elif targetVersion == "7.4.0-242":
 		avaimFULL = "avaim_FULL_7.4.0-242_1.tgz"
-		checksumFULL = "8ece38bc6853e7ee1ba83418acc78d966865d0a1add57107755a31d1547c24b2"
+		checksumFULL = "5232fd35e9f495e7040bbb363293a287ba7531e6deb3db518d45905ca9d81bea"
 		avinstallerFile = "UpgradeAvinstaller-7.4.0-242.avp"
 		upgradeFile = "AvamarUpgrade-7.4.0-242.avp"
 		UpgradeClientDownloads = "UpgradeClientDownloads-7.4.0-242.avp"
@@ -1776,8 +1782,8 @@ def fileNames(targetVersion):
 	########Version 7.5.0-183, onlyIfNeeded folder starts at Rev1########
 	########Customer Handover mail starts at Rev1########
 	elif targetVersion == "7.5.0-183":
-		avaimFULL = "avaim_FULL_7.5.0-183.tgz"
-		checksumFULL = "896050a0b296fa9c5f78036e1a1b6238a464fd4ce8d49c6884aa998ae04e2b94"
+		avaimFULL = "avaim_FULL_7.5.0-183_1.tgz"
+		checksumFULL = "481f0f39c37ac1ffbc3b1e862ec3337317dcd825d49ee079a67b4a23fdc7483e"
 		avinstallerFile = "UpgradeAvinstaller-7.5.0-183.avp"
 		upgradeFile = "AvamarUpgrade-7.5.0-183.avp"
 		UpgradeClientDownloads = "UpgradeClientDownloads-7.5.0-183.avp"
